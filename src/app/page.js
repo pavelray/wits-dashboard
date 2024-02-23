@@ -1,18 +1,11 @@
-import Dashboad from "@/components/Business/Dashboard";
+//import Dashboad from "@/components/Business/Dashboard";
+import Dashboard from "@/components/Business/Dashboard/indexV2";
 
-async function getData() {
-  const res = await fetch("http://localhost:3000/api/siteMapData");
-  if (!res.ok) {
-    throw new Error("Failed to fetch data");
-  }
-  return res.json();
-}
-
-export default async function Home() {
-  const data = await getData();
+export default function Home() {
+ 
   return (
-    <section className="md:container md:mx-auto">
-      <Dashboad data={data.data} />
+    <section className="md:container md:mx-auto md:my-5">
+      <Dashboard />
     </section>
   );
 }

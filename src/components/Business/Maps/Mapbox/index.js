@@ -36,8 +36,6 @@ const Mapbox = ({ data }) => {
     geoDataForMap.features.push(feature);
   });
 
-  console.log(geoDataForMap);
-
   useEffect(() => {
     if (map.current) return; // initialize map only once
     map.current = new mapboxgl.Map({

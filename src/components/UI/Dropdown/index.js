@@ -1,15 +1,19 @@
 "use client";
 
-import React, { Fragment } from "react";
+import React, { Fragment, useState } from "react";
 
-const Dropdown = ({ label, onChange, name, data, value, text, disabled }) => {
+const Dropdown = ({ label, onChange, name, data, value, text, disabled }) => { 
   return (
     <Fragment>
       <label>{label}</label>
       <select className="border" onChange={onChange} name={name}>
         <option>select</option>
         {data?.map((s, i) => (
-          <option key={`${name}_${i}`} value={s[value]} disabled={!s[disabled]}>
+          <option
+            key={`${name}_${i}`}
+            value={s[value]}
+            disabled={!s[disabled]}
+          >
             {s[text].toUpperCase()}
           </option>
         ))}

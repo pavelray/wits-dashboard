@@ -1,5 +1,6 @@
 import axios from "axios";
 import https from "https";
+import siteMapMockResponse from "../data/siteMap.mock";
 
 const getSiteMapDataRepository = async () => {
   let config = {
@@ -40,4 +41,22 @@ const getSiteMapDataRepository = async () => {
   }
 };
 
-export { getSiteMapDataRepository };
+const getSiteMapMockData = () => {
+  const response = { data: siteMapMockResponse };
+  if (response.data) {
+    const {
+      data: {
+        mgmtResponse: { siteOpDTO },
+      },
+    } = response;
+    const formattedDataResponse = Object.groupBy(
+      siteOpDTO,
+      ({ locationGroupType }) => locationGroupType
+    );
+    response.data = formattedDataResponse;
+  }
+
+  return response;
+};
+
+export { getSiteMapDataRepository, getSiteMapMockData };
