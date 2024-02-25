@@ -1,5 +1,15 @@
 import { COOKIE_NAMES } from "./constants";
 
+export const camelCaseToWord = (camelCaseString) => {
+  // Insert space before every capital letter
+  const readableString = camelCaseString.replace(/([A-Z])/g, " $1");
+
+  // Capitalize the first letter and remove leading space
+  return (
+    readableString.charAt(0).toUpperCase() + readableString.slice(1).trim()
+  );
+};
+
 export const flattenObj = (ob) => {
   let result = {};
 
@@ -233,6 +243,125 @@ export const convertAPDetailsDataForGraph = (apDetailsData) => {
     totalCounts,
     total2ghzCount,
     total5ghzCount,
+    datasets,
+  };
+};
+
+export const convertBytes = (byteValue) => {
+  const gigabyte = 1024 * 1024 * 1024;
+  const megabyte = 1024 * 1024;
+
+  if (byteValue >= gigabyte) {
+    // Convert to gigabytes
+    const gigabytes = (byteValue / gigabyte).toFixed(2);
+    return gigabytes + " GB";
+  } else if (byteValue >= megabyte) {
+    // Convert to megabytes
+    const megabytes = (byteValue / megabyte).toFixed(2);
+    return megabytes + " MB";
+  } else {
+    // Return in bytes for values less than 1 MB
+    return byteValue + " bytes";
+  }
+};
+
+export function FormatSessionTime(totalDuration) {
+  const totalSeconds = Math.floor(totalDuration / 1000);
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+  FormatSessionTime.prototype.toString = function () {
+    return `h:${hours}:m:${minutes}:s:${seconds}`;
+  };
+
+  FormatSessionTime.prototype.getValue = function () {
+    return {
+      hours: hours,
+      minutes: minutes,
+      seconds: seconds,
+    };
+  };
+}
+
+function millisecondsToHours(milliseconds) {
+  if (isNaN(milliseconds) || milliseconds < 0) {
+    return "Invalid input";
+  }
+
+  const hours = milliseconds / (1000 * 60 * 60);
+
+  return `${hours.toFixed(2)} hours`;
+}
+
+export const formatClientSessionData = ({ clientList }) => {
+  let userSessionData = [];
+
+  const users = Object.keys(clientList);
+
+  users.forEach((user) => {
+    let userSessionObj = {
+      userName: user,
+    };
+    let totalSessionDuration = 0;
+    let totalThroughput = 0;
+    let totalBytesReceived = 0;
+    let totalBytesSent = 0;
+
+    clientList[user].forEach((session) => {
+      const sessionEndTime =
+        session.clientSessionsDTO.sessionEndTime > Date.now()
+          ? Date.now()
+          : session.clientSessionsDTO.sessionEndTime;
+      const sessionStartTime = session.clientSessionsDTO.sessionStartTime;
+      const sessionDuration = sessionEndTime - sessionStartTime;
+      totalSessionDuration += sessionDuration;
+      totalThroughput += session.clientSessionsDTO.throughput;
+      totalBytesReceived += session.clientSessionsDTO.bytesReceived;
+      totalBytesSent += session.clientSessionsDTO.bytesSent;
+
+      userSessionObj = {
+        ...userSessionObj,
+        ssid: session.clientSessionsDTO.ssid,
+        totalDataReceived: convertBytes(totalBytesReceived),
+        totalDataSent: convertBytes(totalBytesSent),
+        totalThroughput,
+      };
+    });
+    // const sessionDuration = new FormatSessionTime(totalSessionDuration);
+    // const sessionDurationInString = sessionDuration.toString();
+    const sessionDurationInHours = millisecondsToHours(totalSessionDuration);
+    userSessionData.push({
+      ...userSessionObj,
+      // sessionDuration: sessionDurationInString,
+      sessionDuration: sessionDurationInHours,
+    });
+  });
+
+  return userSessionData;
+};
+
+export const convertClientSessionDataForGraph = (clientSession) => {
+  let labels = [];
+  let sessionDuration = [];
+
+  clientSession?.forEach((session) => {
+    const sessionValue = parseFloat(session.sessionDuration.split(" ")[0])
+    labels.push(session.userName);
+    sessionDuration.push(sessionValue);
+  });
+
+  const datasets = [
+    {
+      data: sessionDuration,
+      label: "Session Duration in Hrs",
+      borderColor: "rgb(109, 253, 181)",
+      backgroundColor: "rgb(109, 253, 181,0.5)",
+      borderWidth: 2,
+    }
+  ];
+
+  return {
+    labels,
     datasets,
   };
 };

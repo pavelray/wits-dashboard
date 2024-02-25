@@ -5,14 +5,16 @@ import { createContext, useState } from "react";
 const AppContext = createContext();
 
 const AppProvider = ({ children, ...props }) => {
-  const { campus, building, floor, outdoor } = props;
-  const { defaultBuildingName, defaultCampusName, defaultFloorName } =
-    getDefaultLocation({
-      campus,
-      building,
-      floor,
-      outdoor,
-    }) || {};
+  const {
+    campus,
+    building,
+    floor,
+    outdoor,
+    defaultCampusName,
+    defaultBuildingName,
+    defaultFloorName,
+  } = props;
+
   const [defaultLocation, setDefaultLocation] = useState({
     campusName: defaultCampusName,
     buildingName: defaultBuildingName,
