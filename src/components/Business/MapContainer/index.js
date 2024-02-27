@@ -5,9 +5,10 @@ import Map from "../Maps";
 import { AppContext } from "@/context/AppContext";
 
 const MapContainer = () => {
-  const { defaultLocation, selectedLocation, campus, building } =
+  const { defaultLocation, campus, building } =
     useContext(AppContext);
   const [mapData, setMapData] = useState([]);
+  const [zoom, setZoom ] = useState(14);
 
   useEffect(() => {
     const { campusName } = defaultLocation;
@@ -18,13 +19,14 @@ const MapContainer = () => {
       (b) => b.name.includes(campusName) && b.latitude
     );
     setMapData([...selectedCampusData, ...campusBuildings]);
+    setZoom(16);
   }, [building, campus, defaultLocation]);
 
   return (
     <Card className="rounded-none">
       <CardBody>
-        <h1>Campus and Buildings</h1>
-        {!!mapData.length && mapData && <Map mapData={mapData} />}
+        <h1>{defaultLocation.campusName} Buildings</h1>
+        {!!mapData.length && mapData && <Map mapData={mapData} zoom={zoom} />}
       </CardBody>
     </Card>
   );

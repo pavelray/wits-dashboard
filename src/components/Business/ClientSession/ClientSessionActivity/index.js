@@ -1,18 +1,71 @@
-import ClientSessionTable from "@/components/UI/Table/ClientSessionTable";
 import { ClientSessionContext } from "@/context/ClientSessionContext";
+import React, {
+  Fragment,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+import SessionActivityLineChart from "./SessionActivityLineChart";
+import SessionActivityTable from "./SessionActivityTable";
 import { formatClientSessionData } from "@/utils/helperMethods";
-import httpService from "@/utils/httpService";
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import { getClientSession } from "@/utils/apiHelper";
+import { AppContext } from "@/context/AppContext";
+import ClientDataUsageChart from "./ClientDataUsageChart";
 
-const ClientSessionActivityComponent = ({ defaultLocation }) => {
+const ClientSessionContainer = () => {
+  const { defaultLocation, selectedLocation } = useContext(AppContext);
   const { clientSessionData } = useContext(ClientSessionContext);
-  console.log(clientSessionData);
+  const [sessionData, setSessionData] = useState(clientSessionData);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const loadSessionDataOnLocationChange = useCallback(async () => {
+    const { campusName, buildingName, floorName } = defaultLocation;
+    const sessionData = await getClientSession(
+      campusName,
+      buildingName,
+      floorName
+    );
+    const formattedDataResponse = formatClientSessionData(sessionData);
+    setSessionData(formattedDataResponse);
+    setIsLoading(false);
+  }, [defaultLocation]);
+
+  useEffect(() => {
+    console.log(defaultLocation, selectedLocation);
+    if (
+      selectedLocation &&
+      defaultLocation.buildingName === selectedLocation.buildingName
+    ) {
+      setIsLoading(true);
+      loadSessionDataOnLocationChange();
+    }
+  }, [defaultLocation, loadSessionDataOnLocationChange, selectedLocation]);
+
   return (
-    <div className="w-full flex-1">
-      <h2>User Activity Table Last Day</h2>
-      <ClientSessionTable data={clientSessionData} />
-    </div>
+    <Fragment>
+      <div className="basis-1/2">
+        <div className="bg-white p-4">
+          <SessionActivityLineChart
+            clientSessionData={sessionData}
+            isLoading={isLoading}
+          />
+        </div>
+      </div>
+      <div className="basis-1/2">
+        <div className="bg-white p-4">
+          <ClientDataUsageChart
+            clientSessionData={sessionData}
+            isLoading={isLoading}
+          />
+          {/* <SessionActivityTable
+            clientSessionData={sessionData}
+            isLoading={isLoading}
+          /> */}
+        </div>
+      </div>
+    </Fragment>
   );
 };
 
-export default ClientSessionActivityComponent;
+export default ClientSessionContainer;

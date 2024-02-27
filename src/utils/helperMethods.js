@@ -10,6 +10,28 @@ export const camelCaseToWord = (camelCaseString) => {
   );
 };
 
+export function generateRandomHexCodes(n) {
+  const hexCodes = [];
+
+  for (let i = 0; i < n; i++) {
+    // Generate a random RGB color
+    const rgbColor = [
+      Math.floor(Math.random() * 256),
+      Math.floor(Math.random() * 256),
+      Math.floor(Math.random() * 256),
+    ];
+
+    // Convert RGB to hex
+    const hexCode = `#${rgbColor
+      .map((component) => component.toString(16).padStart(2, "0"))
+      .join("")}`;
+
+    hexCodes.push(hexCode);
+  }
+
+  return hexCodes;
+}
+
 export const flattenObj = (ob) => {
   let result = {};
 
@@ -265,6 +287,16 @@ export const convertBytes = (byteValue) => {
   }
 };
 
+function bytesToGB(bytes) {
+  if (bytes < 0) {
+      throw new Error("Input must be a non-negative number.");
+  }
+
+  const gigabytes = bytes / (1024 * 1024 * 1024);
+  return gigabytes.toFixed(2); // Keep two decimal places
+}
+
+
 export function FormatSessionTime(totalDuration) {
   const totalSeconds = Math.floor(totalDuration / 1000);
   const hours = Math.floor(totalSeconds / 3600);
@@ -322,8 +354,8 @@ export const formatClientSessionData = ({ clientList }) => {
       userSessionObj = {
         ...userSessionObj,
         ssid: session.clientSessionsDTO.ssid,
-        totalDataReceived: convertBytes(totalBytesReceived),
-        totalDataSent: convertBytes(totalBytesSent),
+        totalDataReceived: bytesToGB(totalBytesReceived),
+        totalDataSent: bytesToGB(totalBytesSent),
         totalThroughput,
       };
     });
@@ -345,7 +377,7 @@ export const convertClientSessionDataForGraph = (clientSession) => {
   let sessionDuration = [];
 
   clientSession?.forEach((session) => {
-    const sessionValue = parseFloat(session.sessionDuration.split(" ")[0])
+    const sessionValue = parseFloat(session.sessionDuration.split(" ")[0]);
     labels.push(session.userName);
     sessionDuration.push(sessionValue);
   });
@@ -357,7 +389,41 @@ export const convertClientSessionDataForGraph = (clientSession) => {
       borderColor: "rgb(109, 253, 181)",
       backgroundColor: "rgb(109, 253, 181,0.5)",
       borderWidth: 2,
-    }
+    },
+  ];
+
+  return {
+    labels,
+    datasets,
+  };
+};
+
+export const convertClientUsageDataForGraph = (clientSession) => {
+  let labels = [];
+  let dataReceived = [];
+  let dataSent = [];
+
+  clientSession?.forEach((session) => {
+    const received = parseFloat(session.totalDataReceived);
+    const sent = parseFloat(session.totalDataSent);
+    labels.push(session.userName);
+    dataReceived.push(received);
+    dataSent.push(sent);
+  });
+
+  const backgroundColor = generateRandomHexCodes(dataSent.length);
+
+  const datasets = [
+    {
+      data: dataReceived,
+      label: "Downloaded (GB)",
+      backgroundColor: backgroundColor,
+    },
+    {
+      data: dataSent,
+      label: "Uploaded (GB)",
+      backgroundColor: backgroundColor,
+    },
   ];
 
   return {

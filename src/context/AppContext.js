@@ -1,5 +1,4 @@
 "use client";
-import { getDefaultLocation } from "@/utils/helperMethods";
 import { createContext, useState } from "react";
 
 const AppContext = createContext();

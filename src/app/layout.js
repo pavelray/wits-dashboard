@@ -7,6 +7,7 @@ import httpService from "@/utils/httpService";
 import AppContext, { AppProvider } from "@/context/AppContext";
 import { getDefaultLocation } from "@/utils/helperMethods";
 import { ClientSessionProvider } from "@/context/ClientSessionContext";
+import { getClientSession } from "@/utils/apiHelper";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,30 +24,8 @@ async function getData() {
   return res;
 }
 
-async function getClientSessionActivity(campusName, buildingName, floorName) {
-  const today = new Date();
-  const yesterday = new Date(today);
-  yesterday.setDate(today.getDate() - 1);
-  const startTime = Date.parse(yesterday.toDateString());
-  const endTime = Date.parse(today.toDateString());
-
-  const location = `${campusName} > ${buildingName} > ${floorName}`;
-  const res = await httpService.post(
-    "http://localhost:3000/api/clientSessionDetails",
-    {
-      body: {
-        location: location,
-        startTime: startTime,
-        endTime: endTime,
-        groupBy: "userName",
-      },
-    }
-  );
-  if (!res) {
-    throw new Error("Failed to fetch data");
-  }
-  const { data } = res;
-  return data;
+export async function getClientSessionActivity(campusName, buildingName, floorName) {
+  return getClientSession(campusName, buildingName, floorName);
 }
 
 export default async function RootLayout({ children }) {

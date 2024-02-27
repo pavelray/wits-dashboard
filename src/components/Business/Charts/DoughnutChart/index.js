@@ -3,19 +3,27 @@ import { Fragment, useEffect } from "react";
 import { Chart } from "chart.js/auto";
 import Title from "@/components/UI/Heading/Title";
 
-function FilledLineChart({
+function DoughnutChart({
   labels,
   datasets,
-  name = "Bar Chart",
+  name = "Doughnut Chart",
   id = "myChart",
 }) {
   useEffect(() => {
     const ctx = document.getElementById(id).getContext("2d");
     const myChart = new Chart(ctx, {
-      type: "bar",
+      type: "doughnut",
       data: {
         labels: labels,
         datasets: datasets,
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: "top",
+          }
+        },
       },
     });
     return () => {
@@ -35,4 +43,4 @@ function FilledLineChart({
   );
 }
 
-export default FilledLineChart;
+export default DoughnutChart;

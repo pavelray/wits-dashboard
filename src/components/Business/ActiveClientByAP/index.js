@@ -1,13 +1,17 @@
 "use client";
-import { AppContext } from "@/context/AppContext";
 import { convertAPDetailsDataForGraph } from "@/utils/helperMethods";
 import httpService from "@/utils/httpService";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import FilledLineChart from "../Charts/FilledLineChart";
+import { Skeleton } from "@nextui-org/react";
+import { AppContext } from "@/context/AppContext";
 
-const ActiveClientByAPContainer = ({ defaultLocation }) => {
+const ActiveClientByAPContainer = () => {
+  const { defaultLocation } = useContext(AppContext);
   const [apDetailsData, setAPDetailsData] = useState([]);
   const [chartData, setChartData] = useState();
+  const [isLoading, setLoading] = useState(false);
+
   const getAPDetails = useCallback(async () => {
     const { campusName, buildingName, floorName } = defaultLocation;
     const location = `${campusName} > ${buildingName} > ${floorName}`;
@@ -23,20 +27,28 @@ const ActiveClientByAPContainer = ({ defaultLocation }) => {
     setAPDetailsData(data);
     const chartData = convertAPDetailsDataForGraph(data);
     setChartData(chartData);
+    setLoading(false);
   }, [defaultLocation]);
 
   useEffect(() => {
+    setLoading(true);
     getAPDetails();
   }, [getAPDetails]);
 
   return (
     <div>
-      {chartData && (
+      {!isLoading && chartData && (
         <FilledLineChart
           labels={chartData.labels}
           datasets={chartData.datasets}
           name={`Connected Clients of floor: ${defaultLocation.floorName}`}
+          id="activeClient"
         />
+      )}
+      {isLoading && (
+        <Skeleton className="rounded-lg mt-4">
+          <div className="h-24 rounded-lg bg-default-300"></div>
+        </Skeleton>
       )}
     </div>
   );
