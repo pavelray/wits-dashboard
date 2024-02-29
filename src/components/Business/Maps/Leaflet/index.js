@@ -3,6 +3,7 @@ import L from "leaflet";
 import PropTypes from "prop-types";
 import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
+import { findCenterCoordinates } from "@/utils/helperMethods";
 
 const RecenterAutomatically = ({ center, zoom }) => {
   const map = useMap();
@@ -14,7 +15,9 @@ const RecenterAutomatically = ({ center, zoom }) => {
 
 const Leaflet = ({ data, zoom }) => {
   const id = useId();
-  const mapCenter = [data[0].latitude, data[0].longitude];
+  // const mapCenter = [data[0].latitude, data[0].longitude];
+  const {latitude, longitude} = findCenterCoordinates(data);
+  const mapCenter = [latitude, longitude];
   const defaultIcon = L.icon({
     iconUrl: "../images/marker-icon.png",
     shadowUrl: "../images/marker-shadow.png",
@@ -25,7 +28,7 @@ const Leaflet = ({ data, zoom }) => {
       center={mapCenter}
       zoom={zoom}
       scrollWheelZoom={false}
-      className="sm:w-full sm:h-96 mb-6"
+      className="w-full h-full mb-6"
       fadeAnimation
     >
       <TileLayer
@@ -43,10 +46,9 @@ const Leaflet = ({ data, zoom }) => {
             key={`key-${index}`}
           >
             <Popup>
-              Name: {d.name} <br /> Address: {d.locationAddress} <br />
-              Clinet Connected: {d.clientCount} <br />
-              Access Points: {d.apCount},
-              id: {d.groupId}
+              <b>Name:</b> {d.name.split('/').slice(2).join(" > ").toUpperCase()}<br/>
+              <b>Clinet Connected:</b> {d.clientCount} <br />
+              <b>Access Points:</b> {d.apCount},
             </Popup>
           </Marker>
         );

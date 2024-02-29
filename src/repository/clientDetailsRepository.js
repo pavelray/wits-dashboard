@@ -1,13 +1,23 @@
 import clientDetailsMockResponse from "@/data/clientDetails.mock";
-import { getClientSessionUrl, getCommonHeader } from "@/utils/apiHelper";
+import {
+  applyGroupByFilter,
+  getClientDetailsUrl,
+  getClientSessionUrl,
+  getCommonHeader,
+} from "@/utils/apiHelper";
 import axios from "axios";
 
-const getClientDetailsListRepository = async (
-  location = "NHLS-Forensics > Forensics > 1st Floor"
-) => {
+const getClientDetailsListRepository = async ({
+  location,
+  startTime,
+  endTime,
+  first = 0,
+  last = 1000,
+  groupBy,
+}) => {
   let config = {
     method: "get",
-    url: `https://10.192.48.150/webacs/api/v4/data/ClientDetails?.full=true&.firstResult=0&.maxResults=20&location="${location}"`,
+    url: getClientDetailsUrl(location, first, last, startTime, endTime),
     ...getCommonHeader(),
   };
   try {
@@ -18,7 +28,9 @@ const getClientDetailsListRepository = async (
           queryResponse: { entity, ...otherProps },
         },
       } = response;
-      const formattedDataResponse = entity;
+      const formattedDataResponse = groupBy
+        ? applyGroupByFilter(entity, groupBy)
+        : entity;
       response.data = {
         clientList: formattedDataResponse,
         total: otherProps["@count"],
@@ -62,7 +74,10 @@ const getClientSessionDetailsRepository = async ({
         },
       } = response;
       const formattedDataResponse = groupBy
-        ? Object.groupBy(entity, ({ clientSessionsDTO }) => clientSessionsDTO[groupBy])
+        ? Object.groupBy(
+            entity,
+            ({ clientSessionsDTO }) => clientSessionsDTO[groupBy]
+          )
         : entity;
       response.data = {
         clientList: formattedDataResponse,

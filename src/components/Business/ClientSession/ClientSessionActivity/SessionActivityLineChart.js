@@ -1,5 +1,5 @@
 import { ClientSessionContext } from "@/context/ClientSessionContext";
-import { convertClientSessionDataForGraph } from "@/utils/helperMethods";
+import { convertClientFrequesncyDataForGraph, convertClientSessionDataForGraph } from "@/utils/helperMethods";
 import React, { useContext, useEffect, useState } from "react";
 import FilledLineChart from "../../Charts/FilledLineChart";
 import { Skeleton } from "@nextui-org/react";
@@ -8,7 +8,7 @@ const SessionActivityLineChart = ({ clientSessionData, isLoading }) => {
   const [chartData, setChartData] = useState();
 
   useEffect(() => {
-    const chartData = convertClientSessionDataForGraph(clientSessionData);
+    const chartData = convertClientFrequesncyDataForGraph(clientSessionData);
     setChartData(chartData);
   }, [clientSessionData]);
 
@@ -18,7 +18,7 @@ const SessionActivityLineChart = ({ clientSessionData, isLoading }) => {
         <FilledLineChart
           labels={chartData.labels}
           datasets={chartData.datasets}
-          name={`Client Activity Last Day`}
+          name={`Client Frequency`}
           id="clientSessionChart"
         />
       )}

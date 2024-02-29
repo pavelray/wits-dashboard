@@ -9,7 +9,7 @@ const DynamicLeafletMap = dynamic(() => import("./Leaflet"), { ssr: false });
 
 const Map = ({ type = MAP_TYPE.LEAFLET, mapData, zoom = 14 }) => {
   return (
-    <div className="z-10">
+    <div className="z-10 h-full">
       {type === MAP_TYPE.GOOGLE && <GoogleMap data={mapData} zoom={zoom} />}
       {type === MAP_TYPE.LEAFLET && <DynamicLeafletMap data={mapData} zoom={zoom} />}
       {type === MAP_TYPE.MAPBOX && <Mapbox data={mapData} zoom={zoom} />}

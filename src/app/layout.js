@@ -7,7 +7,7 @@ import httpService from "@/utils/httpService";
 import AppContext, { AppProvider } from "@/context/AppContext";
 import { getDefaultLocation } from "@/utils/helperMethods";
 import { ClientSessionProvider } from "@/context/ClientSessionContext";
-import { getClientSession } from "@/utils/apiHelper";
+import { getClientFrequency, getClientSession } from "@/utils/apiHelper";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,7 +25,7 @@ async function getData() {
 }
 
 export async function getClientSessionActivity(campusName, buildingName, floorName) {
-  return getClientSession(campusName, buildingName, floorName);
+  return getClientFrequency(campusName, buildingName, floorName);
 }
 
 export default async function RootLayout({ children }) {

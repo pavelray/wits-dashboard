@@ -72,6 +72,65 @@ export const formatDate = (timestamp) => {
   return formattedDate;
 };
 
+export function getDateRange(period) {
+  const currentDate = new Date();
+  const startOfDay = new Date(
+    currentDate.getFullYear(),
+    currentDate.getMonth(),
+    currentDate.getDate(),
+    0,
+    0,
+    0,
+    0
+  );
+
+  switch (period) {
+    case "lastWeek":
+      const lastWeekStartDate = new Date(startOfDay);
+      lastWeekStartDate.setDate(startOfDay.getDate() - startOfDay.getDay() - 6);
+      return {
+        start: lastWeekStartDate.toDateString(),
+        end: startOfDay.toDateString(),
+      };
+
+    case "lastMonth":
+      const lastMonthStartDate = new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth(),
+        1
+      );
+      return {
+        start: lastMonthStartDate.toDateString(),
+        end: startOfDay.toDateString(),
+      };
+
+    case "last3Months":
+      const last3MonthsStartDate = new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth() - 2,
+        1
+      );
+      return {
+        start: last3MonthsStartDate.toDateString(),
+        end: startOfDay.toDateString(),
+      };
+
+    case "last6Months":
+      const last6MonthsStartDate = new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth() - 5,
+        1
+      );
+      return {
+        start: last6MonthsStartDate.toDateString(),
+        end: startOfDay.toDateString(),
+      };
+
+    default:
+      return null;
+  }
+}
+
 export const formatClientDetailsTableData = (data) => {
   const formattedObj = {
     clientUserName: "Session Data",
@@ -289,13 +348,12 @@ export const convertBytes = (byteValue) => {
 
 function bytesToGB(bytes) {
   if (bytes < 0) {
-      throw new Error("Input must be a non-negative number.");
+    throw new Error("Input must be a non-negative number.");
   }
 
   const gigabytes = bytes / (1024 * 1024 * 1024);
   return gigabytes.toFixed(2); // Keep two decimal places
 }
-
 
 export function FormatSessionTime(totalDuration) {
   const totalSeconds = Math.floor(totalDuration / 1000);
@@ -386,8 +444,33 @@ export const convertClientSessionDataForGraph = (clientSession) => {
     {
       data: sessionDuration,
       label: "Session Duration in Hrs",
-      borderColor: "rgb(109, 253, 181)",
-      backgroundColor: "rgb(109, 253, 181,0.5)",
+      borderColor: "rgb(255, 205, 86)",
+      backgroundColor: "rgb(255, 205, 86,0.5)",
+      borderWidth: 2,
+    },
+  ];
+
+  return {
+    labels,
+    datasets,
+  };
+};
+
+export const convertClientFrequesncyDataForGraph = (clientDataByDate) => {
+  const labels = Object.keys(clientDataByDate.clientList);
+  let clientCount = [];
+
+  labels?.forEach((date) => {
+    const dateWiseCount = clientDataByDate.clientList[date].length;
+    clientCount.push({ x: date, y: dateWiseCount });
+  });
+
+  const datasets = [
+    {
+      data: clientCount,
+      label: "Clients Frequency",
+      borderColor: "rgb(255, 205, 86)",
+      backgroundColor: "rgb(255, 205, 86,0.5)",
       borderWidth: 2,
     },
   ];
@@ -431,3 +514,25 @@ export const convertClientUsageDataForGraph = (clientSession) => {
     datasets,
   };
 };
+
+export function findCenterCoordinates(locations) {
+  if (locations.length === 0) {
+    throw new Error("Input array is empty.");
+  }
+
+  // Initialize sum of latitudes and longitudes
+  let sumLat = 0;
+  let sumLng = 0;
+
+  // Calculate sum of latitudes and longitudes
+  locations.forEach((location) => {
+    sumLat += location.latitude;
+    sumLng += location.longitude;
+  });
+
+  // Calculate average latitudes and longitudes
+  const avgLat = sumLat / locations.length;
+  const avgLng = sumLng / locations.length;
+
+  return { latitude: avgLat, longitude: avgLng };
+}

@@ -2,6 +2,8 @@
 import { Fragment, useEffect } from "react";
 import { Chart } from "chart.js/auto";
 import Title from "@/components/UI/Heading/Title";
+import "chartjs-adapter-date-fns";
+import { enIN, enUS } from "date-fns/locale";
 
 function FilledLineChart({
   labels,
@@ -9,6 +11,7 @@ function FilledLineChart({
   name = "Bar Chart",
   id = "myChart",
 }) {
+
   useEffect(() => {
     const ctx = document.getElementById(id).getContext("2d");
     const myChart = new Chart(ctx, {

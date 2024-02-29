@@ -23,9 +23,9 @@ const MapContainer = () => {
   }, [building, campus, defaultLocation]);
 
   return (
-    <Card className="rounded-none">
+    <Card className="rounded-none min-h-unit-96 h-full">
       <CardBody>
-        <h1>{defaultLocation.campusName} Buildings</h1>
+        <h1 className="mx-4 font-bold">{defaultLocation.campusName} - Buildings (Total: {mapData?.length})</h1>
         {!!mapData.length && mapData && <Map mapData={mapData} zoom={zoom} />}
       </CardBody>
     </Card>

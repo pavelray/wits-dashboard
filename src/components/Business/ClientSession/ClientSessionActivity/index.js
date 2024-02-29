@@ -9,7 +9,7 @@ import React, {
 import SessionActivityLineChart from "./SessionActivityLineChart";
 import SessionActivityTable from "./SessionActivityTable";
 import { formatClientSessionData } from "@/utils/helperMethods";
-import { getClientSession } from "@/utils/apiHelper";
+import { getClientFrequency, getClientSession } from "@/utils/apiHelper";
 import { AppContext } from "@/context/AppContext";
 import ClientDataUsageChart from "./ClientDataUsageChart";
 
@@ -21,13 +21,13 @@ const ClientSessionContainer = () => {
 
   const loadSessionDataOnLocationChange = useCallback(async () => {
     const { campusName, buildingName, floorName } = defaultLocation;
-    const sessionData = await getClientSession(
+    const sessionData = await getClientFrequency(
       campusName,
       buildingName,
       floorName
     );
-    const formattedDataResponse = formatClientSessionData(sessionData);
-    setSessionData(formattedDataResponse);
+    //const formattedDataResponse = formatClientSessionData(sessionData);
+    setSessionData(sessionData);
     setIsLoading(false);
   }, [defaultLocation]);
 
@@ -54,10 +54,10 @@ const ClientSessionContainer = () => {
       </div>
       <div className="basis-1/2">
         <div className="bg-white p-4">
-          <ClientDataUsageChart
+          {/* <ClientDataUsageChart
             clientSessionData={sessionData}
             isLoading={isLoading}
-          />
+          /> */}
           {/* <SessionActivityTable
             clientSessionData={sessionData}
             isLoading={isLoading}
