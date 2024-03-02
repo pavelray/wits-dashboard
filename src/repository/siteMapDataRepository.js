@@ -1,23 +1,16 @@
 import axios from "axios";
-import https from "https";
 import siteMapMockResponse from "../data/siteMap.mock";
+import {
+  getSiteMapUrl,
+  getCommonHeader,
+  applyGroupByFilter,
+} from "@/utils/apiHelper";
 
 const getSiteMapDataRepository = async () => {
   let config = {
     method: "get",
-    maxBodyLength: Infinity,
-    url: "https://10.192.48.150/webacs/api/v4/op/groups/sites?.full=true",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    },
-    auth: {
-      username: "AI_team",
-      password: "@PrimeAI_API2081",
-    },
-    httpsAgent: new https.Agent({
-      rejectUnauthorized: false,
-    }),
+    url: getSiteMapUrl(),
+    ...getCommonHeader(),
   };
   try {
     const response = await axios.request(config);
@@ -27,13 +20,18 @@ const getSiteMapDataRepository = async () => {
           mgmtResponse: { siteOpDTO },
         },
       } = response;
-      const formattedDataResponse = Object.groupBy(
+      const formattedDataResponse = applyGroupByFilter(
         siteOpDTO,
-        ({ locationGroupType }) => locationGroupType
+        "locationGroupType"
       );
-      response.data = formattedDataResponse;
+      response.data = {
+        result: formattedDataResponse,
+      };
+    } else {
+      response.data = {
+        result: [],
+      };
     }
-
     return response;
   } catch (ex) {
     console.log(ex);
@@ -53,7 +51,7 @@ const getSiteMapMockData = () => {
       siteOpDTO,
       ({ locationGroupType }) => locationGroupType
     );
-    response.data = formattedDataResponse;
+    response.data = { result: formattedDataResponse };
   }
 
   return response;

@@ -7,7 +7,7 @@ import {
 } from "@/utils/apiHelper";
 import axios from "axios";
 
-const getClientDetailsListRepository = async ({
+const getClientFrequencyRepository = async ({
   location,
   startTime,
   endTime,
@@ -29,10 +29,10 @@ const getClientDetailsListRepository = async ({
         },
       } = response;
       const formattedDataResponse = groupBy
-        ? applyGroupByFilter(entity, groupBy)
+        ? applyGroupByFilter(entity, groupBy, "clientDetailsDTO")
         : entity;
       response.data = {
-        clientList: formattedDataResponse,
+        result: formattedDataResponse,
         total: otherProps["@count"],
         first: otherProps["@first"],
         last: otherProps["@last"],
@@ -40,7 +40,7 @@ const getClientDetailsListRepository = async ({
       };
     } else {
       response.data = {
-        clientList: [],
+        result: [],
         location: location,
         total: response.data.queryResponse["@count"],
       };
@@ -57,7 +57,7 @@ const getClientSessionDetailsRepository = async ({
   startTime,
   endTime,
   first = 0,
-  last = 999,
+  last = 1000,
   groupBy,
 }) => {
   let config = {
@@ -73,14 +73,12 @@ const getClientSessionDetailsRepository = async ({
           queryResponse: { entity, ...otherProps },
         },
       } = response;
+
       const formattedDataResponse = groupBy
-        ? Object.groupBy(
-            entity,
-            ({ clientSessionsDTO }) => clientSessionsDTO[groupBy]
-          )
+        ? applyGroupByFilter(entity, groupBy, "clientSessionsDTO")
         : entity;
       response.data = {
-        clientList: formattedDataResponse,
+        result: formattedDataResponse,
         total: otherProps["@count"],
         first: otherProps["@first"],
         last: otherProps["@last"],
@@ -88,7 +86,7 @@ const getClientSessionDetailsRepository = async ({
       };
     } else {
       response.data = {
-        clientList: [],
+        result: [],
         location: location,
         total: response.data.queryResponse["@count"],
       };
@@ -110,7 +108,7 @@ const getClientDetailsMock = (location) => {
     } = response;
     const formattedDataResponse = entity;
     response.data = {
-      clientList: formattedDataResponse,
+      result: formattedDataResponse,
       total: otherProps["@count"],
       first: otherProps["@first"],
       last: otherProps["@last"],
@@ -118,7 +116,7 @@ const getClientDetailsMock = (location) => {
     };
   } else {
     response.data = {
-      clientList: [],
+      result: [],
       location: location,
       total: response.data.queryResponse["@count"],
     };
@@ -127,7 +125,7 @@ const getClientDetailsMock = (location) => {
 };
 
 export {
-  getClientDetailsListRepository,
+  getClientFrequencyRepository,
   getClientDetailsMock,
   getClientSessionDetailsRepository,
 };

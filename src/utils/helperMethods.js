@@ -1,4 +1,4 @@
-import { COOKIE_NAMES } from "./constants";
+import { COOKIE_NAMES, DATE_RANGE_TYPES } from "./constants";
 
 export const camelCaseToWord = (camelCaseString) => {
   // Insert space before every capital letter
@@ -85,7 +85,7 @@ export function getDateRange(period) {
   );
 
   switch (period) {
-    case "lastWeek":
+    case DATE_RANGE_TYPES.LAST_WEEK:
       const lastWeekStartDate = new Date(startOfDay);
       lastWeekStartDate.setDate(startOfDay.getDate() - startOfDay.getDay() - 6);
       return {
@@ -93,7 +93,7 @@ export function getDateRange(period) {
         end: startOfDay.toDateString(),
       };
 
-    case "lastMonth":
+    case DATE_RANGE_TYPES.LAST_MONTH:
       const lastMonthStartDate = new Date(
         currentDate.getFullYear(),
         currentDate.getMonth(),
@@ -104,7 +104,7 @@ export function getDateRange(period) {
         end: startOfDay.toDateString(),
       };
 
-    case "last3Months":
+    case DATE_RANGE_TYPES.LAST_3_MONTH:
       const last3MonthsStartDate = new Date(
         currentDate.getFullYear(),
         currentDate.getMonth() - 2,
@@ -115,7 +115,7 @@ export function getDateRange(period) {
         end: startOfDay.toDateString(),
       };
 
-    case "last6Months":
+    case DATE_RANGE_TYPES.LAST_6_MONTH:
       const last6MonthsStartDate = new Date(
         currentDate.getFullYear(),
         currentDate.getMonth() - 5,
@@ -130,73 +130,6 @@ export function getDateRange(period) {
       return null;
   }
 }
-
-export const formatClientDetailsTableData = (data) => {
-  const formattedObj = {
-    clientUserName: "Session Data",
-    clientIpAddress: data.ipAddress?.address || "",
-    clientMacAddress: data.macAddress.octets.match(/.{2}/g).join(":"),
-    assotiationTime: formatDate(data.associationTime),
-    vendor: data.vendor,
-    apName: data.apName,
-    radioType: "",
-    deviceName: data.deviceName,
-    mapLocation: data.location,
-    ssid: data.ssid,
-    profile: "Session Data",
-    vlanId: data.vlan,
-    protocol: data.protocol,
-    sessionDuration: "Session Data",
-    policyType: data.policyType,
-    averageSessionThroughPut: "Session Data",
-    hostName: "",
-    clientType: data.wiredClientType,
-    localUnique: "",
-    globalUnique: "",
-    linkLocal: "",
-    speed: data.speed,
-    endPointType: "",
-    ccx: data.ccxVersion,
-    apMacAddress: data.apMacAddress.octets.match(/.{2}/g).join(":"),
-    apIpAddress: data.apIpAddress.address,
-    deviceIpAddress: data.deviceIpAddress.address,
-    controllerPort: "",
-    anchorController: "",
-    mobilityOracle: "",
-    mobilityController: "",
-    anchorMobilityController: "",
-    switchPeerGroup: "",
-    assotiationId: "",
-    disassotiationTime: "",
-    encryptionCipher: data.encryptionCypher,
-    eapType: data.eapType,
-    webSecurity: data.webSecurity,
-    authenticationAlog: data.authenticationAlgorithm,
-    byteSent: "Session Data",
-    byteReceived: "Session Data",
-    packetSent: "Session Data",
-    packetReceived: "Session Data",
-    snrDB: "Session Data",
-    rssiDB: "Session Data",
-    status: data.status,
-    reason: "",
-    e2e: "",
-    dataRetries: "",
-    rtsRetries: "",
-    mobilityStatus: data.mobilityStatus,
-    networkAccess: "",
-    pmipState: "",
-    pmipConnectedInterface: "",
-    homeAddress: "",
-    accessTechnologyType: "",
-    localLinkIdentifier: "",
-    sessionId: "",
-    lma: "",
-    interfaceName: data.clientInterface,
-  };
-
-  return formattedObj;
-};
 
 export const setCookie = (name, value, daysToExpire = 365) => {
   const expirationDate = new Date();
@@ -249,16 +182,6 @@ export const getDefaultLocation = ({ campus, building, floor, outdoor }) => {
   let defaultCampusName = "";
   let defaultBuildingName = "";
   let defaultFloorName = "";
-  // if (process.browser) {
-  //   defaultCampusName = getCookie(COOKIE_NAMES.DEFAULT_CAMPUS_NAME);
-  //   defaultBuildingName = getCookie(COOKIE_NAMES.DEFAULT_BUILDING_NAME);
-  //   if (defaultCampusName && defaultBuildingName) {
-  //     return {
-  //       defaultCampusName,
-  //       defaultBuildingName,
-  //     };
-  //   }
-  // }
   campus.forEach((camp) => {
     if (camp.latitude && defaultBuildingName === "") {
       const campusBuildings = building.filter(
@@ -270,61 +193,12 @@ export const getDefaultLocation = ({ campus, building, floor, outdoor }) => {
       defaultCampusName = camp.groupName;
       defaultBuildingName = campusBuildings[0].groupName;
       defaultFloorName = getSelectedFloor(defaultBuildingName, floor, outdoor);
-      // setCookie(COOKIE_NAMES.DEFAULT_BUILDING_NAME, defaultBuildingName);
-      // setCookie(COOKIE_NAMES.DEFAULT_CAMPUS_NAME, defaultCampusName);
     }
   });
   return {
     defaultCampusName,
     defaultBuildingName,
     defaultFloorName,
-  };
-};
-
-export const convertAPDetailsDataForGraph = (apDetailsData) => {
-  const { apList } = apDetailsData;
-  let labels = [];
-  let totalCounts = [];
-  let total2ghzCount = [];
-  let total5ghzCount = [];
-
-  apList.forEach(({ accessPointDetailsDTO }) => {
-    labels.push(accessPointDetailsDTO.name);
-    totalCounts.push(accessPointDetailsDTO.clientCount);
-    total2ghzCount.push(accessPointDetailsDTO.clientCount_2_4GHz);
-    total5ghzCount.push(accessPointDetailsDTO.clientCount_5GHz);
-  });
-
-  const datasets = [
-    {
-      data: totalCounts,
-      label: "Total Clients",
-      borderColor: "rgb(109, 253, 181)",
-      backgroundColor: "rgb(109, 253, 181,0.5)",
-      borderWidth: 2,
-    },
-    {
-      data: total2ghzCount,
-      label: "2.4GHz",
-      borderColor: "rgb(75, 192, 192)",
-      backgroundColor: "rgb(75, 192, 192,0.5)",
-      borderWidth: 2,
-    },
-    {
-      data: total5ghzCount,
-      label: "5GHz",
-      borderColor: "rgb(255, 205, 86)",
-      backgroundColor: "rgb(255, 205, 86,0.5)",
-      borderWidth: 2,
-    },
-  ];
-
-  return {
-    labels,
-    totalCounts,
-    total2ghzCount,
-    total5ghzCount,
-    datasets,
   };
 };
 
@@ -346,7 +220,7 @@ export const convertBytes = (byteValue) => {
   }
 };
 
-function bytesToGB(bytes) {
+export function bytesToGB(bytes) {
   if (bytes < 0) {
     throw new Error("Input must be a non-negative number.");
   }
@@ -373,7 +247,7 @@ export function FormatSessionTime(totalDuration) {
   };
 }
 
-function millisecondsToHours(milliseconds) {
+export const millisecondsToHours = (milliseconds) => {
   if (isNaN(milliseconds) || milliseconds < 0) {
     return "Invalid input";
   }
@@ -381,156 +255,20 @@ function millisecondsToHours(milliseconds) {
   const hours = milliseconds / (1000 * 60 * 60);
 
   return `${hours.toFixed(2)} hours`;
-}
-
-export const formatClientSessionData = ({ clientList }) => {
-  let userSessionData = [];
-
-  const users = Object.keys(clientList);
-
-  users.forEach((user) => {
-    let userSessionObj = {
-      userName: user,
-    };
-    let totalSessionDuration = 0;
-    let totalThroughput = 0;
-    let totalBytesReceived = 0;
-    let totalBytesSent = 0;
-
-    clientList[user].forEach((session) => {
-      const sessionEndTime =
-        session.clientSessionsDTO.sessionEndTime > Date.now()
-          ? Date.now()
-          : session.clientSessionsDTO.sessionEndTime;
-      const sessionStartTime = session.clientSessionsDTO.sessionStartTime;
-      const sessionDuration = sessionEndTime - sessionStartTime;
-      totalSessionDuration += sessionDuration;
-      totalThroughput += session.clientSessionsDTO.throughput;
-      totalBytesReceived += session.clientSessionsDTO.bytesReceived;
-      totalBytesSent += session.clientSessionsDTO.bytesSent;
-
-      userSessionObj = {
-        ...userSessionObj,
-        ssid: session.clientSessionsDTO.ssid,
-        totalDataReceived: bytesToGB(totalBytesReceived),
-        totalDataSent: bytesToGB(totalBytesSent),
-        totalThroughput,
-      };
-    });
-    // const sessionDuration = new FormatSessionTime(totalSessionDuration);
-    // const sessionDurationInString = sessionDuration.toString();
-    const sessionDurationInHours = millisecondsToHours(totalSessionDuration);
-    userSessionData.push({
-      ...userSessionObj,
-      // sessionDuration: sessionDurationInString,
-      sessionDuration: sessionDurationInHours,
-    });
-  });
-
-  return userSessionData;
-};
-
-export const convertClientSessionDataForGraph = (clientSession) => {
-  let labels = [];
-  let sessionDuration = [];
-
-  clientSession?.forEach((session) => {
-    const sessionValue = parseFloat(session.sessionDuration.split(" ")[0]);
-    labels.push(session.userName);
-    sessionDuration.push(sessionValue);
-  });
-
-  const datasets = [
-    {
-      data: sessionDuration,
-      label: "Session Duration in Hrs",
-      borderColor: "rgb(255, 205, 86)",
-      backgroundColor: "rgb(255, 205, 86,0.5)",
-      borderWidth: 2,
-    },
-  ];
-
-  return {
-    labels,
-    datasets,
-  };
-};
-
-export const convertClientFrequesncyDataForGraph = (clientDataByDate) => {
-  const labels = Object.keys(clientDataByDate.clientList);
-  let clientCount = [];
-
-  labels?.forEach((date) => {
-    const dateWiseCount = clientDataByDate.clientList[date].length;
-    clientCount.push({ x: date, y: dateWiseCount });
-  });
-
-  const datasets = [
-    {
-      data: clientCount,
-      label: "Clients Frequency",
-      borderColor: "rgb(255, 205, 86)",
-      backgroundColor: "rgb(255, 205, 86,0.5)",
-      borderWidth: 2,
-    },
-  ];
-
-  return {
-    labels,
-    datasets,
-  };
-};
-
-export const convertClientUsageDataForGraph = (clientSession) => {
-  let labels = [];
-  let dataReceived = [];
-  let dataSent = [];
-
-  clientSession?.forEach((session) => {
-    const received = parseFloat(session.totalDataReceived);
-    const sent = parseFloat(session.totalDataSent);
-    labels.push(session.userName);
-    dataReceived.push(received);
-    dataSent.push(sent);
-  });
-
-  const backgroundColor = generateRandomHexCodes(dataSent.length);
-
-  const datasets = [
-    {
-      data: dataReceived,
-      label: "Downloaded (GB)",
-      backgroundColor: backgroundColor,
-    },
-    {
-      data: dataSent,
-      label: "Uploaded (GB)",
-      backgroundColor: backgroundColor,
-    },
-  ];
-
-  return {
-    labels,
-    datasets,
-  };
 };
 
 export function findCenterCoordinates(locations) {
   if (locations.length === 0) {
     throw new Error("Input array is empty.");
   }
-
-  // Initialize sum of latitudes and longitudes
   let sumLat = 0;
   let sumLng = 0;
 
-  // Calculate sum of latitudes and longitudes
   locations.forEach((location) => {
     sumLat += location.latitude;
     sumLng += location.longitude;
   });
 
-  // Calculate average latitudes and longitudes
   const avgLat = sumLat / locations.length;
   const avgLng = sumLng / locations.length;
 

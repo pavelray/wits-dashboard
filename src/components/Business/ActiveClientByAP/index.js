@@ -1,10 +1,10 @@
 "use client";
-import { convertAPDetailsDataForGraph } from "@/utils/helperMethods";
 import httpService from "@/utils/httpService";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import FilledLineChart from "../Charts/FilledLineChart";
 import { Skeleton } from "@nextui-org/react";
 import { AppContext } from "@/context/AppContext";
+import { convertAPDetailsDataForGraph } from "@/utils/chartDataHelper";
 
 const ActiveClientByAPContainer = () => {
   const { defaultLocation } = useContext(AppContext);
@@ -41,7 +41,7 @@ const ActiveClientByAPContainer = () => {
         <FilledLineChart
           labels={chartData.labels}
           datasets={chartData.datasets}
-          name={`Connected Clients of floor: ${defaultLocation.floorName}`}
+          name={`Active Client: ${defaultLocation.floorName}`}
           id="activeClient"
         />
       )}

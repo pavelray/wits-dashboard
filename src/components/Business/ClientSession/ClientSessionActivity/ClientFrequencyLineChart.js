@@ -1,21 +1,24 @@
-import { ClientSessionContext } from "@/context/ClientSessionContext";
-import { convertClientFrequesncyDataForGraph, convertClientSessionDataForGraph } from "@/utils/helperMethods";
-import React, { useContext, useEffect, useState } from "react";
-import FilledLineChart from "../../Charts/FilledLineChart";
+import React, { useEffect, useState } from "react";
 import { Skeleton } from "@nextui-org/react";
+import { convertFrequencyDataForGraph } from "@/utils/chartDataHelper";
+import LineChart from "../../Charts/LineChart";
 
-const SessionActivityLineChart = ({ clientSessionData, isLoading }) => {
+const ClientFrequencyLineChart = ({ clientSessionData, isLoading }) => {
   const [chartData, setChartData] = useState();
+  const { result: clientFrequencyDetails } = clientSessionData;
 
   useEffect(() => {
-    const chartData = convertClientFrequesncyDataForGraph(clientSessionData);
+    const chartData = convertFrequencyDataForGraph(
+      clientFrequencyDetails,
+      "Client Count"
+    );
     setChartData(chartData);
-  }, [clientSessionData]);
+  }, [clientFrequencyDetails]);
 
   return (
     <div>
       {!isLoading && chartData && (
-        <FilledLineChart
+        <LineChart
           labels={chartData.labels}
           datasets={chartData.datasets}
           name={`Client Frequency`}
@@ -31,4 +34,4 @@ const SessionActivityLineChart = ({ clientSessionData, isLoading }) => {
   );
 };
 
-export default SessionActivityLineChart;
+export default ClientFrequencyLineChart;

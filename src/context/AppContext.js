@@ -4,28 +4,29 @@ import { createContext, useState } from "react";
 const AppContext = createContext();
 
 const AppProvider = ({ children, ...props }) => {
+  const { appProps } = props;
   const {
-    campus,
-    building,
-    floor,
-    outdoor,
-    defaultCampusName,
-    defaultBuildingName,
-    defaultFloorName,
-  } = props;
+    CAMPUS,
+    BUILDING,
+    FLOORAREA,
+    OUTDOORAREA,
+    campusName,
+    buildingName,
+    floorName,
+  } = appProps;
 
   const [defaultLocation, setDefaultLocation] = useState({
-    campusName: defaultCampusName,
-    buildingName: defaultBuildingName,
-    floorName: defaultFloorName,
+    campusName,
+    buildingName,
+    floorName,
   });
   const [selectedLocation, setSelectedLocation] = useState();
 
   const appContext = {
-    campus,
-    building,
-    floor,
-    outdoor,
+    campus: CAMPUS,
+    building: BUILDING,
+    floor: FLOORAREA,
+    outdoor: OUTDOORAREA,
     defaultLocation,
     selectedLocation,
     setDefaultLocation,

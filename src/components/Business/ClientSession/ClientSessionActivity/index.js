@@ -6,12 +6,13 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import SessionActivityLineChart from "./SessionActivityLineChart";
+import ClientFrequencyLineChart from "./ClientFrequencyLineChart";
 import SessionActivityTable from "./SessionActivityTable";
 import { formatClientSessionData } from "@/utils/helperMethods";
-import { getClientFrequency, getClientSession } from "@/utils/apiHelper";
+
 import { AppContext } from "@/context/AppContext";
 import ClientDataUsageChart from "./ClientDataUsageChart";
+import { getClientFrequency } from "@/utils/clientApiHelper";
 
 const ClientSessionContainer = () => {
   const { defaultLocation, selectedLocation } = useContext(AppContext);
@@ -46,7 +47,7 @@ const ClientSessionContainer = () => {
     <Fragment>
       <div className="basis-1/2">
         <div className="bg-white p-4">
-          <SessionActivityLineChart
+          <ClientFrequencyLineChart
             clientSessionData={sessionData}
             isLoading={isLoading}
           />

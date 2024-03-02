@@ -6,8 +6,9 @@ import NavbarComponent from "@/components/UI/Navbar";
 import httpService from "@/utils/httpService";
 import AppContext, { AppProvider } from "@/context/AppContext";
 import { getDefaultLocation } from "@/utils/helperMethods";
-import { ClientSessionProvider } from "@/context/ClientSessionContext";
-import { getClientFrequency, getClientSession } from "@/utils/apiHelper";
+import { ClientDataProvider } from "@/context/ClientSessionContext";
+import { getClientFrequency } from "@/utils/clientApiHelper";
+import { getSiteMapData } from "@/utils/siteMapApiHelper";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,64 +17,50 @@ export const metadata = {
   description: "Dashboad for Wits to track network activities",
 };
 
-async function getData() {
-  const res = await httpService.get("http://localhost:3000/api/siteMapData");
-  if (!res) {
-    throw new Error("Failed to fetch data");
-  }
-  return res;
+async function getCampusData() {
+  return getSiteMapData();
 }
 
-export async function getClientSessionActivity(campusName, buildingName, floorName) {
+export async function getClientFrequencyData(
+  campusName,
+  buildingName,
+  floorName
+) {
   return getClientFrequency(campusName, buildingName, floorName);
 }
 
 export default async function RootLayout({ children }) {
-  const { data } = await getData();
-  const { FLOORAREA, BUILDING, CAMPUS, OUTDOORAREA, DEFAULT } = data;
-  const { defaultBuildingName, defaultCampusName, defaultFloorName } =
-    getDefaultLocation({
-      campus: CAMPUS,
-      building: BUILDING,
-      floor: FLOORAREA,
-      outdoor: OUTDOORAREA,
-    }) || {};
+  const data = await getCampusData();
+  const { DEFAULT_LOCATION } = data;
+  const { buildingName, campusName, floorName } = DEFAULT_LOCATION;
 
-  const sessionData = await getClientSessionActivity(
-    defaultCampusName,
-    defaultBuildingName,
-    defaultFloorName
+  const initalClientFrequencyData = await getClientFrequencyData(
+    campusName,
+    buildingName,
+    floorName
   );
+
+  const appProps = {
+    ...data,
+    buildingName,
+    campusName,
+    floorName,
+  };
 
   return (
     <html lang="en">
       <body className={inter.className}>
-        <AppProvider
-          campus={CAMPUS}
-          outdoor={OUTDOORAREA}
-          building={BUILDING}
-          floor={FLOORAREA}
-          default={DEFAULT}
-          defaultBuildingName={defaultBuildingName}
-          defaultCampusName={defaultCampusName}
-          defaultFloorName={defaultFloorName}
-        >
+        <AppProvider appProps={appProps}>
           <NavbarComponent />
           <main className="min-h-screen">
-            <ClientSessionProvider
-              clientSessionData={sessionData}
-              defaultLocation={{
-                campusName: defaultCampusName,
-                buildingName: defaultBuildingName,
-                floorName: defaultFloorName,
-              }}
+            <ClientDataProvider
+              clientSessionData={initalClientFrequencyData}
+              defaultLocation={DEFAULT_LOCATION}
             >
               <Suspense fallback={<Loading />}>{children}</Suspense>
-            </ClientSessionProvider>
+            </ClientDataProvider>
           </main>
-          <footer className="h-40 mx-5">
-
-          </footer>
+          <footer className="h-40 mx-5"></footer>
         </AppProvider>
       </body>
     </html>
