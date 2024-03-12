@@ -13,6 +13,7 @@ const AppProvider = ({ children, ...props }) => {
     campusName,
     buildingName,
     floorName,
+    DEFAULT,
   } = appProps;
 
   const [defaultLocation, setDefaultLocation] = useState({
@@ -27,6 +28,7 @@ const AppProvider = ({ children, ...props }) => {
     building: BUILDING,
     floor: FLOORAREA,
     outdoor: OUTDOORAREA,
+    allLocation: DEFAULT,
     defaultLocation,
     selectedLocation,
     setDefaultLocation,

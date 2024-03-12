@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import DoughnutChart from "../../Charts/DoughnutChart";
 import { Skeleton } from "@nextui-org/react";
-import { convertClientUsageDataForGraph } from "@/utils/helperMethods";
+import { convertClientUsageDataForGraph } from "@/utils/chartDataHelper";
+
 
 const ClientDataUsageChart = ({ clientSessionData, isLoading }) => {
   const [chartData, setChartData] = useState();

@@ -56,13 +56,14 @@ const getClientSessionDetailsRepository = async ({
   location,
   startTime,
   endTime,
+  apName,
   first = 0,
   last = 1000,
   groupBy,
 }) => {
   let config = {
     method: "get",
-    url: getClientSessionUrl(location, first, last, startTime, endTime),
+    url: getClientSessionUrl(location, apName, first, last, startTime, endTime),
     ...getCommonHeader(),
   };
   try {

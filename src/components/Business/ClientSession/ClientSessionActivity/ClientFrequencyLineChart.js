@@ -1,3 +1,4 @@
+"use client";
 import React, { useEffect, useState } from "react";
 import { Skeleton } from "@nextui-org/react";
 import { convertFrequencyDataForGraph } from "@/utils/chartDataHelper";
@@ -5,15 +6,15 @@ import LineChart from "../../Charts/LineChart";
 
 const ClientFrequencyLineChart = ({ clientSessionData, isLoading }) => {
   const [chartData, setChartData] = useState();
-  const { result: clientFrequencyDetails } = clientSessionData;
 
   useEffect(() => {
+    const { result: clientFrequencyDetails } = clientSessionData;
     const chartData = convertFrequencyDataForGraph(
       clientFrequencyDetails,
       "Client Count"
     );
     setChartData(chartData);
-  }, [clientFrequencyDetails]);
+  }, [clientSessionData]);
 
   return (
     <div>

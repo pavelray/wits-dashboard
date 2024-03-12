@@ -19,7 +19,7 @@ const NavbarComponent = () => {
       </NavbarBrand>
       <NavbarContent justify="end">
         <NavbarItem className="lg:flex">
-          <LocationModal  />
+          {/* <LocationModal  /> */}
         </NavbarItem>
       </NavbarContent>
     </Navbar>

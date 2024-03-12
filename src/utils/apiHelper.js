@@ -20,12 +20,16 @@ export const getCommonHeader = () => {
 
 export const getClientSessionUrl = (
   location,
+  apName,
   first = 0,
   last = 999,
   startTime,
   endTime
 ) => {
-  const url = `${CISCO_PRIME_API_URL}data/ClientSessions?.full=true&.firstResult=${first}&.maxResults=${last}&location="${location}"&sessionStartTime=between(${startTime},${endTime})`;
+  let url = `${CISCO_PRIME_API_URL}data/ClientSessions?.full=true&.firstResult=${first}&.maxResults=${last}&location="contains(${location})"&sessionStartTime=between(${startTime},${endTime})`;
+  if (apName) {
+    url = `${CISCO_PRIME_API_URL}data/ClientSessions?.full=true&.firstResult=${first}&.maxResults=${last}&apMacAddress="${apName}"&sessionStartTime=between(${startTime},${endTime})`;
+  }
   return url;
 };
 
@@ -44,8 +48,8 @@ export const getSiteMapUrl = () => {
   return `${CISCO_PRIME_API_URL}op/groups/sites?.full=true`;
 };
 
-export const getAPDetailsUrl = (location) => {
-  return `${CISCO_PRIME_API_URL}data/AccessPointDetails?.full=true&locationHierarchy="${location}"`;
+export const getAPDetailsUrl = (location, max = 1000) => {
+  return `${CISCO_PRIME_API_URL}data/AccessPointDetails?.full=true&.maxResults=${max}&locationHierarchy=contains("${location}")`;
 };
 
 export const applyGroupByFilter = (entity, groupBy, objectDTO) => {
@@ -53,7 +57,7 @@ export const applyGroupByFilter = (entity, groupBy, objectDTO) => {
     return Object.groupBy(entity, (object) => {
       const dateValue = object[objectDTO][groupBy];
 
-      return new Date(dateValue).toLocaleDateString();
+      return new Date(dateValue).toDateString();
     });
   }
   if (objectDTO) {

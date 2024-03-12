@@ -65,11 +65,12 @@ const LocationModal = () => {
 
   const handleOnLocationSave = () => {
     const { buildingName, campusName } = selectedLocation;
-    if (saveAsDefault) {
-      setLocationCookie(campusName, buildingName);
-    }
+
     const defaultFloorName = getSelectedFloor(buildingName, floor, outdoor);
     setDefaultLocation({ ...selectedLocation, floorName: defaultFloorName });
+    if (saveAsDefault) {
+      setLocationCookie(campusName, buildingName, defaultFloorName);
+    }
     onClose();
   };
 

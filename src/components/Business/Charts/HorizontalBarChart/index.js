@@ -3,43 +3,34 @@ import { Fragment, useEffect } from "react";
 import { Chart } from "chart.js/auto";
 import Title from "@/components/UI/Heading/Title";
 import "chartjs-adapter-date-fns";
-import { enUS } from "date-fns/locale";
+import { enIN, enUS } from "date-fns/locale";
 
-function LineChart({ labels, datasets, name = "Line Chart", id = "myChart" }) {
+function HorizontalBarChart({
+  labels,
+  datasets,
+  name = "Bar Chart",
+  id = "myChart",
+}) {
+    console.log(labels);
   useEffect(() => {
     const ctx = document.getElementById(id).getContext("2d");
     const myChart = new Chart(ctx, {
-      type: "line",
+      type: "bar",
       data: {
         labels: labels,
         datasets: datasets,
       },
       options: {
-        scales: {
-          x: {
-            type: "time",
-            time: {
-              unit: "day",
-            },
-            title: {
-              display: true,
-              text: "Date",
-            },
-          },
-          y: {
-            title: {
-              display: true,
-              text: "value",
-            },
-            min: 0,
-            ticks: {
-              stepSize: 1,
-            },
+        indexAxis: "y",
+        elements: {
+          bar: {
+            borderWidth: 2,
           },
         },
-        adapters: {
-          date: {
-            locale: enUS,
+        responsive: true,
+        plugins: {
+          legend: {
+            position: "right",
           },
         },
       },
@@ -53,7 +44,7 @@ function LineChart({ labels, datasets, name = "Line Chart", id = "myChart" }) {
     <Fragment>
       <Title text={name} />
       <div className="w-full h-full flex mx-auto my-auto">
-        <div className="border border-gray-400 pt-0 w-full h-fit my-auto">
+        <div className="border border-gray-400 pt-0 w-full h-fit my-auto overflow-x-auto">
           <canvas id={id}></canvas>
         </div>
       </div>
@@ -61,4 +52,4 @@ function LineChart({ labels, datasets, name = "Line Chart", id = "myChart" }) {
   );
 }
 
-export default LineChart;
+export default HorizontalBarChart;

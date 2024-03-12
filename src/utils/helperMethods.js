@@ -156,9 +156,10 @@ export const deleteCookie = (name) => {
   setCookie(name, "", -1); // Set the expiration date to a past time
 };
 
-export const setLocationCookie = (campusName, buildingName) => {
+export const setLocationCookie = (campusName, buildingName, floorName) => {
   setCookie(COOKIE_NAMES.DEFAULT_BUILDING_NAME, buildingName);
   setCookie(COOKIE_NAMES.DEFAULT_CAMPUS_NAME, campusName);
+  setCookie(COOKIE_NAMES.DEFAULT_FLOOR_NAME, floorName);
 };
 
 export const getSelectedFloor = (buildingName, floor, outdoor) => {
@@ -172,7 +173,7 @@ export const getSelectedFloor = (buildingName, floor, outdoor) => {
     const slectedBuildingOutdoor = outdoor.filter((fl) =>
       fl.name.includes(buildingName)
     );
-    defaultFloorName = slectedBuildingOutdoor[0].groupName;
+    defaultFloorName = slectedBuildingOutdoor[0]?.groupName;
   }
 
   return defaultFloorName;

@@ -35,17 +35,27 @@ export const convertClientUsageDataForGraph = (clientSession) => {
 };
 
 export const convertFrequencyDataForGraph = (data, labelName) => {
-  const labels = Object.keys(data);
-  let frequencyCount = [];
+  console.log(data);
+  const datesArr = Object.keys(data);
+  let clientFrequencyByDate = [];
+  let lablesArr = [];
 
-  labels?.forEach((date) => {
-    const dateWiseCount = data[date].length;
-    frequencyCount.push({ x: date, y: dateWiseCount });
+  datesArr.forEach((date) => {
+    const clientsByDate = Object?.groupBy(
+      data[date],
+      ({ clientSessionsDTO }) => clientSessionsDTO?.userName
+    );
+    const clientCount = Object?.keys(clientsByDate).length;
+    clientFrequencyByDate.push({
+      x: new Date(date).toISOString(),
+      y: clientCount,
+    });
+    lablesArr.push(new Date(date).toISOString());
   });
 
   const datasets = [
     {
-      data: frequencyCount,
+      data: clientFrequencyByDate,
       label: labelName,
       borderColor: "rgb(255, 205, 86)",
       backgroundColor: "rgb(255, 205, 86,0.5)",
@@ -54,7 +64,7 @@ export const convertFrequencyDataForGraph = (data, labelName) => {
   ];
 
   return {
-    labels,
+    labels: lablesArr,
     datasets,
   };
 };
@@ -87,6 +97,7 @@ export const convertClientSessionDataForGraph = (clientSession) => {
 
 export const convertAPDetailsDataForGraph = (apDetailsData) => {
   const { result } = apDetailsData;
+  console.log(result);
   let labels = [];
   let totalCounts = [];
   let total2ghzCount = [];

@@ -109,3 +109,19 @@ export const formatClientDetailsTableData = (data) => {
 
   return formattedObj;
 };
+
+export const getClinetCountByDate = (data) => {
+  const datesArr = Object.keys(data);
+  let result = [];
+
+  datesArr.forEach((date) => {
+    const clientsByDate = Object.groupBy(
+      data[date],
+      ({ clientSessionsDTO }) => clientSessionsDTO?.userName
+    );
+    const clientCount = Object.keys(clientsByDate).length;
+    result.push({ date: new Date(date).toISOString(), count: clientCount });
+  });
+
+  return result;
+};

@@ -1,3 +1,4 @@
-import StatsContainer from "./StatsContainer";
+import BuildingStatsContainer from "./BuildingStatsContainer";
+import AllLocationStatsContainer from "./AllLocationStatsContainer";
 
-export default StatsContainer;
+export { BuildingStatsContainer, AllLocationStatsContainer };
