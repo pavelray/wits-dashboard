@@ -11,7 +11,7 @@ function HorizontalBarChart({
   name = "Bar Chart",
   id = "myChart",
 }) {
-    console.log(labels);
+
   useEffect(() => {
     const ctx = document.getElementById(id).getContext("2d");
     const myChart = new Chart(ctx, {

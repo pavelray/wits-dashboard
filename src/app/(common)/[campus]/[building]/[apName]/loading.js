@@ -6,9 +6,6 @@ export default function Loading() {
       <Skeleton className="rounded-lg w-full h-unit-72">
         <div className="h-24 rounded-lg bg-default-300"></div>
       </Skeleton>
-      <Skeleton className="rounded-lg w-full h-unit-72">
-        <div className="h-24 rounded-lg bg-default-300"></div>
-      </Skeleton>
     </div>
   );
 }

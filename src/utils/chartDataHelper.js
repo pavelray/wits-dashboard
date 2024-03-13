@@ -35,7 +35,6 @@ export const convertClientUsageDataForGraph = (clientSession) => {
 };
 
 export const convertFrequencyDataForGraph = (data, labelName) => {
-  console.log(data);
   const datesArr = Object.keys(data);
   let clientFrequencyByDate = [];
   let lablesArr = [];
@@ -97,7 +96,6 @@ export const convertClientSessionDataForGraph = (clientSession) => {
 
 export const convertAPDetailsDataForGraph = (apDetailsData) => {
   const { result } = apDetailsData;
-  console.log(result);
   let labels = [];
   let totalCounts = [];
   let total2ghzCount = [];

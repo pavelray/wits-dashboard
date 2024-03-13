@@ -1,4 +1,3 @@
-// import Dashboard from "@/components/Business/Dashboard";
 import Dashboard from "@/components/Business/Dashboard/indexV2";
 
 export default function Home() {

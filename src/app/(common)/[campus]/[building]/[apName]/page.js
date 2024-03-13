@@ -1,6 +1,5 @@
 import ClientSessionContainer from "@/components/Business/ClientSession/ClientSessionActivity";
 import { getClientSession } from "@/utils/clientApiHelper";
-import { getClinetCountByDate } from "@/utils/clientDataTransformer";
 
 const getClientFrequencyByAP = async ({ campusName, buildingName, apName }) => {
   const clientResponse = await getClientSession({

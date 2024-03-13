@@ -34,12 +34,6 @@ export default async function RootLayout({ children }) {
   const { DEFAULT_LOCATION } = data;
   const { buildingName, campusName, floorName } = DEFAULT_LOCATION;
 
-  // const initalClientFrequencyData = await getClientFrequencyData(
-  //   campusName,
-  //   buildingName,
-  //   floorName
-  // );
-
   const appProps = {
     ...data,
     buildingName,
@@ -53,12 +47,7 @@ export default async function RootLayout({ children }) {
         <AppProvider appProps={appProps}>
           <NavbarComponent />
           <main className="min-h-screen">
-            <ClientDataProvider
-              clientSessionData={{}}
-              defaultLocation={DEFAULT_LOCATION}
-            >
-              <Suspense fallback={<Loading />}>{children}</Suspense>
-            </ClientDataProvider>
+            <Suspense fallback={<Loading />}>{children}</Suspense>
           </main>
           <footer className="h-40 mx-5"></footer>
         </AppProvider>

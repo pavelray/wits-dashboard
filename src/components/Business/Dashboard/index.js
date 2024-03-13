@@ -15,7 +15,6 @@ const Dashboad = () => {
     selectedLocation
   } = useContext(AppContext);
 
-  console.log(selectedLocation);
   const [selectedCampus, setSelectedCampus] = useState([]);
   const [selectedBuilding, setSelectedBuilding] = useState([]);
   const [ddlBuildingData, setDdlBuildingData] = useState([]);

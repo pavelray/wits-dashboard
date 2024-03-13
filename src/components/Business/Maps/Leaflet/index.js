@@ -57,13 +57,17 @@ const Leaflet = ({ data, zoom, onPopupActionClick }) => {
                 <div className="text-small text-default-500 p-0 m-1">
                   Access Points: {d.apCount}
                 </div>
-                {/* <div className="text-small text-default-500 p-0 m-1">
-                  Connected Clients: {d.clientCount}
-                </div> */}
               </div>
-              <div>
-                <Button color="success" onClick={()=>onPopupActionClick(campus, building)}>View Details</Button>
-              </div>
+              {d.apCount > 0 && (
+                <div>
+                  <Button
+                    color="success"
+                    onClick={() => onPopupActionClick(campus, building)}
+                  >
+                    View Details
+                  </Button>
+                </div>
+              )}
             </Popup>
           </Marker>
         );
