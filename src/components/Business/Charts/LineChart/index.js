@@ -15,12 +15,21 @@ function LineChart({ labels, datasets, name = "Line Chart", id = "myChart" }) {
         datasets: datasets,
       },
       options: {
+        responsive: true,
         scales: {
           x: {
             type: "time",
             time: {
               unit: "day",
+              tooltipFormat: "dd MMM yyyy HH:mm:ss",
+              displayFormats: {
+                day: "dd MMM yyyy",
+              },
             },
+            // ticks: {
+            //   beginAtZero: false,
+            //   autoSkip: false,
+            // },
             title: {
               display: true,
               text: "Date",

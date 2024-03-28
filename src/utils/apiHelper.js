@@ -52,12 +52,39 @@ export const getAPDetailsUrl = (location, max = 1000) => {
   return `${CISCO_PRIME_API_URL}data/AccessPointDetails?.full=true&.maxResults=${max}&locationHierarchy=contains("${location}")`;
 };
 
+export const formatClientSessionDataResponse = (entity) => {
+  return entity.map(({clientSessionsDTO}) => {
+    return {
+      id: clientSessionsDTO["@id"],
+      sessionStartTime: clientSessionsDTO.sessionStartTime,
+      sessionEndTime: clientSessionsDTO.sessionEndTime,
+      apMacAddress: clientSessionsDTO.apMacAddress?.octets,
+      location: clientSessionsDTO.location,
+      userName: clientSessionsDTO.userName,
+      ipAddress: clientSessionsDTO.ipAddress?.octets,
+      macAddress: clientSessionsDTO.macAddress?.octets,
+    };
+  });
+};
+
 export const applyGroupByFilter = (entity, groupBy, objectDTO) => {
   if (groupBy.includes("time") || groupBy.includes("Time")) {
     return Object.groupBy(entity, (object) => {
       const dateValue = object[objectDTO][groupBy];
-
-      return new Date(dateValue).toDateString();
+      const monthNumber = new Date(dateValue).getMonth();
+      const date = new Date(dateValue).toDateString();
+      const day = new Date(dateValue).getDate();
+      // const month = monthNumber > 10 ? monthNumber : `0${monthNumber}`;
+      // const year = new Date(dateValue).getFullYear();
+      // const time = new Date(dateValue).toLocaleTimeString().split(":")[0];
+      // const newDate = `${year}-${month}-${day} ${time}:00:00`;
+      // return new Date(newDate).toString();
+      const year = date.getFullYear();
+      const month = date.getMonth() + 1; // Month is zero-based, so add 1
+      const key = `${year}-${month.toString().padStart(2, '0')}`;
+      // const newDate = `${year}-${month}-${day}`;
+      return key;
+      //return new Date(newDate).toDateString();
     });
   }
   if (objectDTO) {

@@ -91,6 +91,8 @@ export function getDateRange(period) {
       return {
         start: lastWeekStartDate.toDateString(),
         end: startOfDay.toDateString(),
+        startDate: lastWeekStartDate,
+        endDate: startOfDay
       };
 
     case DATE_RANGE_TYPES.LAST_MONTH:

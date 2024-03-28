@@ -39,7 +39,11 @@ export const convertFrequencyDataForGraph = (data, labelName) => {
   let clientFrequencyByDate = [];
   let lablesArr = [];
 
-  datesArr.forEach((date) => {
+  const sortedDateArr = datesArr.sort((a, b) => {
+    return new Date(a) - new Date(b);
+  });
+
+  sortedDateArr.forEach((date) => {
     const clientsByDate = Object?.groupBy(
       data[date],
       ({ clientSessionsDTO }) => clientSessionsDTO?.userName
@@ -51,6 +55,8 @@ export const convertFrequencyDataForGraph = (data, labelName) => {
     });
     lablesArr.push(new Date(date).toISOString());
   });
+
+  console.log(clientFrequencyByDate);
 
   const datasets = [
     {

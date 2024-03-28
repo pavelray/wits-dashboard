@@ -17,7 +17,33 @@ export const DATE_RANGE_TYPES = {
   LAST_6_MONTH: "last6Months",
 };
 
-export const DEFAULT_DATE_RANGE = DATE_RANGE_TYPES.LAST_6_MONTH;
+export const DATA_FREQUENCY = {
+  HOUR: "hour",
+  DAY: "day",
+  WEEK: "week",
+  MONTH: "month",
+};
+
+export const DATA_FREQUENCY_VALUES = [
+  {
+    key: DATA_FREQUENCY.HOUR,
+    value: 'Hour',
+  },
+  {
+    key: DATA_FREQUENCY.DAY,
+    value: 'Day',
+  },
+  {
+    key: DATA_FREQUENCY.WEEK,
+    value: 'Week',
+  },
+  {
+    key: DATA_FREQUENCY.MONTH,
+    value: 'Month',
+  },
+];
+
+export const DEFAULT_DATE_RANGE = DATE_RANGE_TYPES.LAST_WEEK;
 
 export const CISCO_PRIME_API_URL = "https://10.192.48.150/webacs/api/v4/";
 

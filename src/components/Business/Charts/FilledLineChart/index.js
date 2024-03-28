@@ -26,7 +26,7 @@ function FilledLineChart({
         scales: {
           x: {
             ticks: {
-              autoSkip: false,
+              autoSkip: true,
             },
             title: {
               display: true,

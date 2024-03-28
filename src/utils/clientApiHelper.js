@@ -9,11 +9,10 @@ export const getClientSession = async ({
   buildingName,
   floorName,
   apName,
-  range = DEFAULT_DATE_RANGE,
+  startDate,
+  endDate
 }) => {
-  const { start, end } = getDateRange(range);
-  const startTime = Date.parse(start);
-  const endTime = Date.parse(end);
+
   let location = `${campusName} > ${buildingName}`;
   if (floorName) {
     location = `${campusName} > ${buildingName} > ${floorName}`;
@@ -23,8 +22,8 @@ export const getClientSession = async ({
     body: {
       location: location,
       apName: apName,
-      startTime: startTime,
-      endTime: endTime,
+      startTime: startDate,
+      endTime: endDate,
       groupBy: "sessionStartTime",
     },
   });
