@@ -1,16 +1,14 @@
-import { Inter } from "next/font/google";
 import "./globals.css";
 import { Suspense } from "react";
 import Loading from "./loading";
 import NavbarComponent from "@/components/UI/Navbar";
+
 import httpService from "@/utils/httpService";
 import AppContext, { AppProvider } from "@/context/AppContext";
 import { getDefaultLocation } from "@/utils/helperMethods";
 import { ClientDataProvider } from "@/context/ClientSessionContext";
 import { getClientFrequency } from "@/utils/clientApiHelper";
 import { getSiteMapData } from "@/utils/siteMapApiHelper";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
   title: "Wits - Dashboard",
@@ -43,7 +41,7 @@ export default async function RootLayout({ children }) {
 
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body>
         <AppProvider appProps={appProps}>
           <NavbarComponent />
           <main className="min-h-screen">

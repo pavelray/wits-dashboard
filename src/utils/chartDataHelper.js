@@ -1,4 +1,4 @@
-import { generateRandomHexCodes } from "./helperMethods";
+import { generateRandomHexCodes, groupBy } from "./helperMethods";
 
 export const convertClientUsageDataForGraph = (clientSession) => {
   let labels = [];
@@ -44,10 +44,7 @@ export const convertFrequencyDataForGraph = (data, labelName) => {
   });
 
   sortedDateArr.forEach((date) => {
-    const clientsByDate = Object?.groupBy(
-      data[date],
-      ({ clientSessionsDTO }) => clientSessionsDTO?.userName
-    );
+    const clientsByDate = groupBy(data[date], (obj) => obj.userName);
     const clientCount = Object?.keys(clientsByDate).length;
     clientFrequencyByDate.push({
       x: new Date(date).toISOString(),
@@ -55,8 +52,6 @@ export const convertFrequencyDataForGraph = (data, labelName) => {
     });
     lablesArr.push(new Date(date).toISOString());
   });
-
-  console.log(clientFrequencyByDate);
 
   const datasets = [
     {

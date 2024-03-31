@@ -1,3 +1,6 @@
+import { DATA_FREQUENCY } from "./constants";
+import { groupBy } from "./helperMethods";
+
 export const formatClientSessionData = ({ clientList }) => {
   let userSessionData = [];
 
@@ -124,4 +127,40 @@ export const getClinetCountByDate = (data) => {
   });
 
   return result;
+};
+
+export const fortmatDataByFrequencyType = (entity, frequencyType) => {
+  if (frequencyType === DATA_FREQUENCY.HOUR) {
+    return groupBy(entity, (object) => {
+      const dateValue = object["sessionStartTime"];
+      const monthNumber = new Date(dateValue).getMonth() + 1;
+      const day = new Date(dateValue).getDate();
+      const month = monthNumber > 10 ? monthNumber : `0${monthNumber}`;
+      const year = new Date(dateValue).getFullYear();
+      const time = new Date(dateValue).toLocaleTimeString().split(":")[0];
+      const newDate = `${year}-${month}-${day} ${time}:00:00`;
+      return new Date(newDate).toString();
+    });
+  }
+  if (frequencyType === DATA_FREQUENCY.DAY) {
+    return groupBy(entity, (object) => {
+      const dateValue = object["sessionStartTime"];
+      const monthNumber = new Date(dateValue).getMonth() + 1;
+      const day = new Date(dateValue).getDate();
+      const month = monthNumber > 10 ? monthNumber : `0${monthNumber}`;
+      const year = new Date(dateValue).getFullYear();
+      const newDate = `${year}-${month}-${day}`;
+      return new Date(newDate).toDateString();
+    });
+  }
+  if (frequencyType === DATA_FREQUENCY.MONTH) {
+    return groupBy(entity, (object) => {
+      const dateValue = object["sessionStartTime"];
+      const date = new Date(dateValue);
+      const year = date.getFullYear();
+      const month = date.getMonth() + 1; // Month is zero-based, so add 1
+      const key = `${year}-${month.toString().padStart(2, "0")}`;
+      return key;
+    });
+  }
 };

@@ -8,9 +8,8 @@ const ClientFrequencyLineChart = ({ clientSessionData, isLoading }) => {
   const [chartData, setChartData] = useState();
 
   useEffect(() => {
-    const { result: clientFrequencyDetails } = clientSessionData;
     const chartData = convertFrequencyDataForGraph(
-      clientFrequencyDetails,
+      clientSessionData,
       "Client Count"
     );
     setChartData(chartData);

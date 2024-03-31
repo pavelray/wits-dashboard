@@ -1,28 +1,17 @@
 "use client";
-import { ClientSessionContext } from "@/context/ClientSessionContext";
-import React, {
-  Fragment,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import React, { Fragment, useState } from "react";
 import ClientFrequencyLineChart from "./ClientFrequencyLineChart";
-import SessionActivityTable from "./SessionActivityTable";
-import { formatClientSessionData, getDateRange } from "@/utils/helperMethods";
-
-import { AppContext } from "@/context/AppContext";
-import ClientDataUsageChart from "./ClientDataUsageChart";
-import { getClientFrequency, getClientSession } from "@/utils/clientApiHelper";
+import { getDateRange } from "@/utils/helperMethods";
+import { getClientSession } from "@/utils/clientApiHelper";
 import { Select, SelectItem } from "@nextui-org/react";
 import { DateRangePicker } from "rsuite";
+
 import {
   DATA_FREQUENCY,
   DATA_FREQUENCY_VALUES,
   DATE_RANGE_TYPES,
-  DEFAULT_DATE_RANGE,
 } from "@/utils/constants";
-import { format } from "date-fns";
+import { fortmatDataByFrequencyType } from "@/utils/clientDataTransformer";
 
 const ClientSessionContainer = ({
   clientSessionData,
@@ -32,13 +21,20 @@ const ClientSessionContainer = ({
 }) => {
   const { startDate, endDate } = getDateRange(DATE_RANGE_TYPES.LAST_WEEK);
   const { afterToday } = DateRangePicker;
-  console.log(clientSessionData);
+  const defaultFrequencyType = [DATA_FREQUENCY.HOUR];
+
+  const dataByClientFrequencyType = fortmatDataByFrequencyType(
+    clientSessionData.result,
+    defaultFrequencyType[0]
+  );
 
   const [dateRange, setDateRange] = useState([startDate, endDate]);
-  const [sessionData, setSessionData] = useState(clientSessionData);
+  const [dataFrequencyType, setDataFrequencyType] =
+    useState(defaultFrequencyType);
+  const [sessionData, setSessionData] = useState(dataByClientFrequencyType);
   const [isLoading, setIsLoading] = useState(false);
 
-  const getClientSessionData = async (selectedDate) => {
+  const getClientSessionData = async (selectedDate, frequencyType) => {
     const startDate = Date.parse(selectedDate[0]);
     const endDate = Date.parse(selectedDate[1]);
     const clientResponse = await getClientSession({
@@ -48,19 +44,26 @@ const ClientSessionContainer = ({
       startDate,
       endDate,
     });
-
-    setSessionData(clientResponse);
+    const dataByClientFrequencyType = fortmatDataByFrequencyType(
+      clientResponse.result,
+      frequencyType
+    );
+    setDataFrequencyType([frequencyType]);
+    setSessionData(dataByClientFrequencyType);
     setIsLoading(false);
   };
 
   const handleDateChange = async (selectedDate) => {
     setIsLoading(true);
-    await getClientSessionData(selectedDate);
+    await getClientSessionData(selectedDate, dataFrequencyType[0]);
   };
 
-  const handleOnChange = () => {
-
-  }
+  const handleOnChange = async (event) => {
+    setIsLoading(true);
+    const { value } = event.target;
+    setDataFrequencyType([value]);
+    await getClientSessionData(dateRange, value);
+  };
 
   return (
     <Fragment>
@@ -78,7 +81,7 @@ const ClientSessionContainer = ({
             selectionMode="single"
             label="Frequency"
             className="max-w-xs rounded-none"
-            defaultSelectedKeys={[DATA_FREQUENCY.HOUR]}
+            defaultSelectedKeys={dataFrequencyType}
             name="dataFrequency"
             onChange={handleOnChange}
           >
@@ -91,19 +94,6 @@ const ClientSessionContainer = ({
           isLoading={isLoading}
         />
       </div>
-
-      {/* <div className="basis-1/2">
-        <div className="bg-white p-4">
-          <ClientDataUsageChart
-            clientSessionData={sessionData}
-            isLoading={isLoading}
-          />
-          <SessionActivityTable
-            clientSessionData={sessionData}
-            isLoading={isLoading}
-          />
-        </div>
-      </div> */}
     </Fragment>
   );
 };

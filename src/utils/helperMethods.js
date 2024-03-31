@@ -92,7 +92,7 @@ export function getDateRange(period) {
         start: lastWeekStartDate.toDateString(),
         end: startOfDay.toDateString(),
         startDate: lastWeekStartDate,
-        endDate: startOfDay
+        endDate: startOfDay,
       };
 
     case DATE_RANGE_TYPES.LAST_MONTH:
@@ -276,4 +276,15 @@ export function findCenterCoordinates(locations) {
   const avgLng = sumLng / locations.length;
 
   return { latitude: avgLat, longitude: avgLng };
+}
+
+export function groupBy(array, keySelector) {
+  return array.reduce((acc, currentItem) => {
+    const key = keySelector(currentItem);
+    if (!acc[key]) {
+      acc[key] = [];
+    }
+    acc[key].push(currentItem);
+    return acc;
+  }, {});
 }

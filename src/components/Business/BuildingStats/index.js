@@ -1,12 +1,13 @@
 "use client";
-import React, { useContext, useEffect } from "react";
+import React from "react";
 import { BuildingStatsContainer } from "../StatsContainer";
-import { getSelectedFloor } from "@/utils/helperMethods";
-import { AppContext } from "@/context/AppContext";
 import ActiveClientByAPContainer from "../ActiveClientByAP";
-import ClientSessionContainer from "../ClientSession/ClientSessionActivity";
 
-const BuildingStatsComponent = ({ buildingName, campusName, accessPointData }) => {
+const BuildingStatsComponent = ({
+  buildingName,
+  campusName,
+  accessPointData,
+}) => {
   return (
     <div className="container mx-auto px-4">
       <div className="flex flex-row mb-4">

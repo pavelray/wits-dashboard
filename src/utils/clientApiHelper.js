@@ -10,9 +10,8 @@ export const getClientSession = async ({
   floorName,
   apName,
   startDate,
-  endDate
+  endDate,
 }) => {
-
   let location = `${campusName} > ${buildingName}`;
   if (floorName) {
     location = `${campusName} > ${buildingName} > ${floorName}`;
@@ -24,7 +23,7 @@ export const getClientSession = async ({
       apName: apName,
       startTime: startDate,
       endTime: endDate,
-      groupBy: "sessionStartTime",
+      // groupBy: "sessionStartTime",
     },
   });
   if (!res) {

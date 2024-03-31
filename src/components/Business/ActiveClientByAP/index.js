@@ -1,16 +1,6 @@
 "use client";
-import httpService from "@/utils/httpService";
-import React, {
-  Fragment,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import React, { Fragment } from "react";
 import FilledLineChart from "../Charts/FilledLineChart";
-import { Skeleton } from "@nextui-org/react";
-import { AppContext } from "@/context/AppContext";
-import { convertAPDetailsDataForGraph } from "@/utils/chartDataHelper";
 import AccessPointsSelect from "../AccessPointsDDL";
 
 const ActiveClientByAPContainer = ({

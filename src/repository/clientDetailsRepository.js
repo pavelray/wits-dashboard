@@ -1,6 +1,7 @@
 import clientDetailsMockResponse from "@/data/clientDetails.mock";
 import {
   applyGroupByFilter,
+  formatClientSessionDataResponse,
   getClientDetailsUrl,
   getClientSessionUrl,
   getCommonHeader,
@@ -77,7 +78,7 @@ const getClientSessionDetailsRepository = async ({
 
       const formattedDataResponse = groupBy
         ? applyGroupByFilter(entity, groupBy, "clientSessionsDTO")
-        : entity;
+        : formatClientSessionDataResponse(entity);
       response.data = {
         result: formattedDataResponse,
         total: otherProps["@count"],

@@ -22,9 +22,9 @@ function LineChart({ labels, datasets, name = "Line Chart", id = "myChart" }) {
             time: {
               unit: "day",
               tooltipFormat: "dd MMM yyyy HH:mm:ss",
-              displayFormats: {
-                day: "dd MMM yyyy",
-              },
+              // displayFormats: {
+              //   day: "dd MMM yyyy",
+              // },
             },
             // ticks: {
             //   beginAtZero: false,

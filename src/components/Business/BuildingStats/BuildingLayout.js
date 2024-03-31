@@ -1,6 +1,6 @@
 "use client";
 import { BreadcrumbItem, Breadcrumbs } from "@nextui-org/react";
-import React, { Fragment } from "react";
+import React from "react";
 
 const BuildingLayoutComponent = ({ children, pathname }) => {
   const pathNameArr = pathname.split("/").splice(1);
