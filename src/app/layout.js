@@ -3,11 +3,7 @@ import { Suspense } from "react";
 import Loading from "./loading";
 import NavbarComponent from "@/components/UI/Navbar";
 
-import httpService from "@/utils/httpService";
-import AppContext, { AppProvider } from "@/context/AppContext";
-import { getDefaultLocation } from "@/utils/helperMethods";
-import { ClientDataProvider } from "@/context/ClientSessionContext";
-import { getClientFrequency } from "@/utils/clientApiHelper";
+import { AppProvider } from "@/context/AppContext";
 import { getSiteMapData } from "@/utils/siteMapApiHelper";
 
 export const metadata = {
@@ -19,24 +15,10 @@ async function getCampusData() {
   return getSiteMapData();
 }
 
-export async function getClientFrequencyData(
-  campusName,
-  buildingName,
-  floorName
-) {
-  return getClientFrequency(campusName, buildingName, floorName);
-}
-
 export default async function RootLayout({ children }) {
-  const data = await getCampusData();
-  const { DEFAULT_LOCATION } = data;
-  const { buildingName, campusName, floorName } = DEFAULT_LOCATION;
-
+  const { result } = await getCampusData();
   const appProps = {
-    ...data,
-    buildingName,
-    campusName,
-    floorName,
+    ...result,
   };
 
   return (

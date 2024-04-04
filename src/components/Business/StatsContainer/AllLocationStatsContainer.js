@@ -5,6 +5,7 @@ import React, { useContext } from "react";
 
 const AllLocationStatsContainer = () => {
   const { allLocation } = useContext(AppContext);
+  console.log(allLocation)
   return (
     <div className="flex flex-col text-left">
       <div className="flex flex-row gap-2">

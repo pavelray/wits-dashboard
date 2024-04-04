@@ -4,18 +4,18 @@ import React, { useContext, useEffect, useState } from "react";
 import Map from "../Maps";
 import { AppContext } from "@/context/AppContext";
 import { useRouter } from "next/navigation";
+import { DEFAULT_MAP_ZOOM_VALUE } from "@/utils/constants";
 
 
 const MapContainer = () => {
   const router = useRouter();
   const { campus, building } = useContext(AppContext);
   const [mapData, setMapData] = useState([]);
-  const [zoom, setZoom] = useState(14);
+  const [zoom] = useState(DEFAULT_MAP_ZOOM_VALUE);
 
   useEffect(() => {
     const campusBuildings = building.filter((b) => b.latitude); // Showing all the buildings on the map
     setMapData([...campusBuildings]);
-    setZoom(16);
   }, [building, campus]);
 
   const handlePopupAction = (campus, building) => {

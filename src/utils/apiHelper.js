@@ -93,6 +93,6 @@ export const applyGroupByFilter = (entity, groupByValue, objectDTO) => {
     return groupBy(entity, (object) => object[objectDTO[groupBy]]);
   }
   return groupBy(entity, (obj) => {
-    return obj[groupBy];
+    return obj[groupByValue];
   });
 };

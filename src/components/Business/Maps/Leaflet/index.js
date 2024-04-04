@@ -1,26 +1,43 @@
 import React, { useEffect } from "react";
 import L from "leaflet";
+import "leaflet.heat";
 import PropTypes from "prop-types";
 import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { findCenterCoordinates } from "@/utils/helperMethods";
 import { Button } from "@nextui-org/react";
+import { DEFAULT_HEAT_MAP_CONFIG } from "@/utils/constants";
 
-const RecenterAutomatically = ({ center, zoom }) => {
+const PlotHeatMaps = ({ points }) => {
+  const map = useMap();
+  useEffect(() => {
+    L.heatLayer(points, DEFAULT_HEAT_MAP_CONFIG).addTo(map);
+  }, [map, points]);
+  return null;
+};
+
+const RecenterAutomatically = ({ center, zoom, points }) => {
   const map = useMap();
   useEffect(() => {
     map.flyTo(center, zoom);
-  }, [center, map, zoom]);
+  }, [center, map, points, zoom]);
   return null;
 };
 
 const Leaflet = ({ data, zoom, onPopupActionClick }) => {
+  console.log(data, zoom);
   const { latitude, longitude } = findCenterCoordinates(data);
   const mapCenter = [latitude, longitude];
   const defaultIcon = L.icon({
     iconUrl: "../images/marker-icon.png",
     shadowUrl: "../images/marker-shadow.png",
   });
+
+  const points = data
+    ? data.map((p) => {
+        return [p.latitude, p.longitude, p.clientCount];
+      })
+    : [];
 
   return (
     <MapContainer
@@ -72,6 +89,7 @@ const Leaflet = ({ data, zoom, onPopupActionClick }) => {
           </Marker>
         );
       })}
+      <PlotHeatMaps points={points} />
       <RecenterAutomatically center={mapCenter} zoom={zoom} />
     </MapContainer>
   );

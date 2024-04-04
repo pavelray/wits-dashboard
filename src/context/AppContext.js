@@ -1,27 +1,11 @@
 "use client";
-import { createContext, useState } from "react";
+import { createContext } from "react";
 
 const AppContext = createContext();
 
 const AppProvider = ({ children, ...props }) => {
   const { appProps } = props;
-  const {
-    CAMPUS,
-    BUILDING,
-    FLOORAREA,
-    OUTDOORAREA,
-    campusName,
-    buildingName,
-    floorName,
-    DEFAULT,
-  } = appProps;
-
-  const [defaultLocation, setDefaultLocation] = useState({
-    campusName,
-    buildingName,
-    floorName,
-  });
-  const [selectedLocation, setSelectedLocation] = useState();
+  const { CAMPUS, BUILDING, FLOORAREA, OUTDOORAREA, DEFAULT } = appProps;
 
   const appContext = {
     campus: CAMPUS,
@@ -29,10 +13,6 @@ const AppProvider = ({ children, ...props }) => {
     floor: FLOORAREA,
     outdoor: OUTDOORAREA,
     allLocation: DEFAULT,
-    defaultLocation,
-    selectedLocation,
-    setDefaultLocation,
-    setSelectedLocation,
   };
 
   return (

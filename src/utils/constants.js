@@ -27,23 +27,26 @@ export const DATA_FREQUENCY = {
 export const DATA_FREQUENCY_VALUES = [
   {
     key: DATA_FREQUENCY.HOUR,
-    value: 'Hour',
+    value: "Hour",
   },
   {
     key: DATA_FREQUENCY.DAY,
-    value: 'Day',
+    value: "Day",
   },
   {
     key: DATA_FREQUENCY.WEEK,
-    value: 'Week',
+    value: "Week",
   },
   {
     key: DATA_FREQUENCY.MONTH,
-    value: 'Month',
+    value: "Month",
   },
 ];
 
+export const DEFAULT_HEAT_MAP_CONFIG = { max: 15, min: 1, radius: 25, blur: 18 };
+
 export const DEFAULT_DATE_RANGE = DATE_RANGE_TYPES.LAST_WEEK;
+export const DEFAULT_MAP_ZOOM_VALUE = 14;
 
 export const CISCO_PRIME_API_URL = "https://10.192.48.150/webacs/api/v4/";
 
