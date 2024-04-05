@@ -1,7 +1,7 @@
 import React from "react";
 
-const Report = () => {
+const ReportPage = () => {
   return <div>This is Report page</div>;
 };
 
-export default Report;
+export default ReportPage;
