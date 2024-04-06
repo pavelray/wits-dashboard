@@ -30,9 +30,6 @@ const BuildingStatsComponent = ({
             </div>
           </div>
         </div>
-        {/* <div className="basis-1/2">
-          <ClientSessionContainer />
-        </div> */}
       </div>
     </div>
   );

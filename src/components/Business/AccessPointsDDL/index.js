@@ -7,7 +7,6 @@ const AccessPointsSelect = ({ apList, building, campus }) => {
   const [selectedAPName, setSelectedAPName] = useState();
   const handleOnChange = (e) => {
     const { name, value } = e.target;
-    console.log(value);
     setSelectedAPName({
       [name]: value,
     });
