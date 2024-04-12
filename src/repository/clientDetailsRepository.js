@@ -58,38 +58,86 @@ const getClientSessionDetailsRepository = async ({
   startTime,
   endTime,
   apName,
-  first = 0,
-  last = 1000,
+  first,
+  perPage,
   groupBy,
 }) => {
   let config = {
     method: "get",
-    url: getClientSessionUrl(location, apName, first, last, startTime, endTime),
+    url: getClientSessionUrl(
+      location,
+      apName,
+      first,
+      perPage,
+      startTime,
+      endTime
+    ),
     ...getCommonHeader(),
   };
+  let formattedDataResponse = [];
+
   try {
     const response = await axios.request(config);
     if (response.data && response.data.queryResponse["@count"] > 0) {
       const {
         data: {
-          queryResponse: { entity, ...otherProps },
+          queryResponse: { entity },
         },
       } = response;
+      formattedDataResponse.push(...formatClientSessionDataResponse(entity));
 
-      const formattedDataResponse = groupBy
-        ? applyGroupByFilter(entity, groupBy, "clientSessionsDTO")
-        : formatClientSessionDataResponse(entity);
+      const total = response.data.queryResponse["@count"];
+      const perPage = 1000;
+      const requestArr = [];
+      if (total > perPage) {
+        const numPages = Math.floor(total / perPage);
+        const remainder = total % perPage;
+
+        for (let page = 2; page <= numPages; page++) {
+          const startPage = perPage * (page - 1);
+          config.url = getClientSessionUrl(
+            location,
+            apName,
+            startPage,
+            perPage,
+            startTime,
+            endTime
+          );
+          requestArr.push(axios.request(config));
+        }
+        if (remainder > 0) {
+          const startPage = numPages * perPage;
+          config.url = getClientSessionUrl(
+            location,
+            apName,
+            startPage,
+            perPage,
+            startTime,
+            endTime
+          );
+          requestArr.push(axios.request(config));
+        }
+      }
+      const responseArr = await Promise.allSettled(requestArr);
+      responseArr.forEach((response) => {
+        const {
+          data: {
+            queryResponse: { entity },
+          },
+        } = response.value;
+        formattedDataResponse.push(...formatClientSessionDataResponse(entity));
+      });
       response.data = {
         result: formattedDataResponse,
-        total: otherProps["@count"],
-        first: otherProps["@first"],
-        last: otherProps["@last"],
+        total,
+        perPage,
         location: location,
-      };
-    } else {
+      }
+    }else {
       response.data = {
-        result: [],
+        result: formattedDataResponse,
         location: location,
+        perPage,
         total: response.data.queryResponse["@count"],
       };
     }

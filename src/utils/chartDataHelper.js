@@ -34,7 +34,11 @@ export const convertClientUsageDataForGraph = (clientSession) => {
   };
 };
 
-export const convertFrequencyDataForGraph = (data, labelName) => {
+export const convertFrequencyDataForGraph = (
+  data,
+  labelName,
+  groupLevel = "id"
+) => {
   const datesArr = Object.keys(data);
   let clientFrequencyByDate = [];
   let lablesArr = [];
@@ -44,7 +48,7 @@ export const convertFrequencyDataForGraph = (data, labelName) => {
   });
 
   sortedDateArr.forEach((date) => {
-    const clientsByDate = groupBy(data[date], (obj) => obj.userName);
+    const clientsByDate = groupBy(data[date], (obj) => obj[groupLevel]);
     const clientCount = Object?.keys(clientsByDate).length;
     clientFrequencyByDate.push({
       x: new Date(date).toISOString(),
@@ -66,6 +70,34 @@ export const convertFrequencyDataForGraph = (data, labelName) => {
   return {
     labels: lablesArr,
     datasets,
+  };
+};
+
+export const convertFrequencyDataForGraphV2 = (
+  data,
+  groupLevel = "id"
+) => {
+  const datesArr = Object.keys(data);
+  let clientFrequencyByDate = [];
+  let lablesArr = [];
+
+  const sortedDateArr = datesArr.sort((a, b) => {
+    return new Date(a) - new Date(b);
+  });
+
+  sortedDateArr.forEach((date) => {
+    const clientsByDate = groupBy(data[date], (obj) => obj[groupLevel]);
+    const clientCount = Object?.keys(clientsByDate).length;
+    clientFrequencyByDate.push({
+      x: new Date(date).toISOString(),
+      y: clientCount,
+    });
+    lablesArr.push(new Date(date).toISOString());
+  });
+
+  return {
+    labels: lablesArr,
+    chartData: clientFrequencyByDate,
   };
 };
 

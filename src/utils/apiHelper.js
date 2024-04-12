@@ -23,13 +23,13 @@ export const getClientSessionUrl = (
   location,
   apName,
   first = 0,
-  last = 999,
+  perPage = 1000,
   startTime,
   endTime
 ) => {
-  let url = `${CISCO_PRIME_API_URL}data/ClientSessions?.full=true&.firstResult=${first}&.maxResults=${last}&location="contains(${location})"&sessionStartTime=between(${startTime},${endTime})`;
+  let url = `${CISCO_PRIME_API_URL}data/ClientSessions?.full=true&.firstResult=${first}&.maxResults=${perPage}&location=contains("${location}")&sessionStartTime=between(${startTime},${endTime})`;
   if (apName) {
-    url = `${CISCO_PRIME_API_URL}data/ClientSessions?.full=true&.firstResult=${first}&.maxResults=${last}&apMacAddress="${apName}"&sessionStartTime=between(${startTime},${endTime})`;
+    url = `${CISCO_PRIME_API_URL}data/ClientSessions?.full=true&.firstResult=${first}&.maxResults=${perPage}&apMacAddress="${apName}"&sessionStartTime=between(${startTime},${endTime})`;
   }
   return url;
 };
@@ -55,6 +55,8 @@ export const getAPDetailsUrl = (location, max = 1000) => {
 
 export const formatClientSessionDataResponse = (entity) => {
   return entity.map(({ clientSessionsDTO }) => {
+    const regex = /\s*>\s*/;
+    const locationArr = clientSessionsDTO.location.trim().split(regex);
     return {
       id: clientSessionsDTO["@id"],
       sessionStartTime: clientSessionsDTO.sessionStartTime,
@@ -64,6 +66,9 @@ export const formatClientSessionDataResponse = (entity) => {
       userName: clientSessionsDTO.userName,
       ipAddress: clientSessionsDTO.ipAddress?.octets,
       macAddress: clientSessionsDTO.macAddress?.octets,
+      campus: locationArr[0],
+      building: locationArr[1],
+      buildingArea: locationArr.length > 2 ? locationArr[2] : "",
     };
   });
 };

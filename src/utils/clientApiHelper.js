@@ -11,19 +11,19 @@ export const getClientSession = async ({
   apName,
   startDate,
   endDate,
+  location
 }) => {
-  let location = `${campusName} > ${buildingName}`;
+  let locationStr = `${campusName} > ${buildingName}`;
   if (floorName) {
-    location = `${campusName} > ${buildingName} > ${floorName}`;
+    locationStr = `${campusName} > ${buildingName} > ${floorName}`;
   }
 
   const res = await httpService.post(`${HOST_URL}/api/clientSessionDetails`, {
     body: {
-      location: location,
+      location: location || locationStr,
       apName: apName,
       startTime: startDate,
       endTime: endDate,
-      // groupBy: "sessionStartTime",
     },
   });
   if (!res) {
