@@ -1,4 +1,4 @@
-import { getAPDetailsUrl, getCommonHeader } from "@/utils/apiHelper";
+import { formatAPDataResponse, getAPDetailsUrl, getCommonHeader } from "@/utils/apiHelper";
 import axios from "axios";
 
 const getAPDetailsListRepository = async (location) => {
@@ -15,7 +15,7 @@ const getAPDetailsListRepository = async (location) => {
           queryResponse: { entity, ...otherProps },
         },
       } = response;
-      const formattedDataResponse = entity;
+      const formattedDataResponse = formatAPDataResponse(entity);
       response.data = {
         result: formattedDataResponse,
         total: otherProps["@count"],

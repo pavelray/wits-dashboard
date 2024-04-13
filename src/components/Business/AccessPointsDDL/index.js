@@ -35,10 +35,10 @@ const AccessPointsSelect = ({ apList, building, campus }) => {
           name="apName"
           onChange={handleOnChange}
         >
-          {({ accessPointDetailsDTO }) => (
+          {(accessPointDetailsDTO) => (
             <SelectItem
               key={JSON.stringify({
-                macAddress: accessPointDetailsDTO.macAddress.octets,
+                macAddress: accessPointDetailsDTO.macAddress,
                 name: accessPointDetailsDTO.name,
               })}
             >

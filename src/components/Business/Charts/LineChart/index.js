@@ -42,7 +42,7 @@ function LineChart({ labels, datasets, name = "Line Chart", id = "myChart" }) {
             },
             min: 0,
             ticks: {
-              stepSize: 1,
+              stepSize: 5,
             },
           },
         },

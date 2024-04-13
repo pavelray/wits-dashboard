@@ -38,7 +38,7 @@ function FilledLineChart({
               display: true,
               text: yAxesTitle,
             },
-            min: 0,
+            min: 1,
             ticks: {
               stepSize: 1,
             },
@@ -54,7 +54,6 @@ function FilledLineChart({
 
   return (
     <Fragment>
-      <Title text={name} />
       <div className="w-full h-full flex mx-auto my-auto">
         <div className="border border-gray-400 pt-0 w-full h-fit my-auto">
           <canvas id={id}></canvas>

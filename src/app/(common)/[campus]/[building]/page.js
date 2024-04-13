@@ -1,5 +1,6 @@
 import BuildingStatsComponent from "@/components/Business/BuildingStats";
 import { convertAPDetailsDataForGraph } from "@/utils/chartDataHelper";
+import { groupBy } from "@/utils/helperMethods";
 import httpService from "@/utils/httpService";
 
 const getAPDetails = async (campusName, buildingName) => {
@@ -13,9 +14,17 @@ const getAPDetails = async (campusName, buildingName) => {
     throw new Error("Failed to fetch data");
   }
   const { data } = res;
-
-  const chartData = convertAPDetailsDataForGraph(data);
-  return { apDetailsData: data, chartData };
+  const floorwiseAP = groupBy(data.result, (result) => result.buildingArea);
+  const responseData = [];
+  Object.keys(floorwiseAP).forEach((floor) => {
+    const chartData = convertAPDetailsDataForGraph(floorwiseAP[floor]);
+    responseData.push({
+      apDetailsData: floorwiseAP[floor],
+      chartData,
+      name: floor,
+    });
+  });
+  return responseData;
 };
 
 export default async function Building({ params }) {

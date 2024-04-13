@@ -8,6 +8,7 @@ const BuildingStatsComponent = ({
   campusName,
   accessPointData,
 }) => {
+  console.log("accessPointData",accessPointData );
   return (
     <div className="container mx-auto px-4">
       <div className="flex flex-row mb-4">

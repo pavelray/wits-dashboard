@@ -64,8 +64,31 @@ export const formatClientSessionDataResponse = (entity) => {
       apMacAddress: clientSessionsDTO.apMacAddress?.octets,
       location: clientSessionsDTO.location,
       userName: clientSessionsDTO.userName,
-      ipAddress: clientSessionsDTO.ipAddress?.octets,
+      ipAddress: clientSessionsDTO.ipAddress?.address,
       macAddress: clientSessionsDTO.macAddress?.octets,
+      campus: locationArr[0],
+      building: locationArr[1],
+      buildingArea: locationArr.length > 2 ? locationArr[2] : "",
+    };
+  });
+};
+
+export const formatAPDataResponse = (entity) => {
+  return entity.map(({ accessPointDetailsDTO }) => {
+    const regex = /\s*>\s*/;
+    const locationArr = accessPointDetailsDTO.locationHierarchy
+      .trim()
+      .split(regex);
+    return {
+      id: accessPointDetailsDTO["@id"],
+      clientCount: accessPointDetailsDTO.clientCount,
+      clientCount_2_4GHz: accessPointDetailsDTO.clientCount_2_4GHz,
+      clientCount_5GHz: accessPointDetailsDTO.clientCount_5GHz,
+      type: accessPointDetailsDTO.type,
+      location: accessPointDetailsDTO.locationHierarchy,
+      name: accessPointDetailsDTO.name,
+      ipAddress: accessPointDetailsDTO.ipAddress?.address,
+      macAddress: accessPointDetailsDTO.macAddress?.octets,
       campus: locationArr[0],
       building: locationArr[1],
       buildingArea: locationArr.length > 2 ? locationArr[2] : "",

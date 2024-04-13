@@ -127,14 +127,13 @@ export const convertClientSessionDataForGraph = (clientSession) => {
   };
 };
 
-export const convertAPDetailsDataForGraph = (apDetailsData) => {
-  const { result } = apDetailsData;
+export const convertAPDetailsDataForGraph = (result) => {
   let labels = [];
   let totalCounts = [];
   let total2ghzCount = [];
   let total5ghzCount = [];
 
-  result.forEach(({ accessPointDetailsDTO }) => {
+  result.forEach((accessPointDetailsDTO) => {
     labels.push(accessPointDetailsDTO.name);
     totalCounts.push(accessPointDetailsDTO.clientCount);
     total2ghzCount.push(accessPointDetailsDTO.clientCount_2_4GHz);
