@@ -61,6 +61,7 @@ const getClientSessionDetailsRepository = async ({
   first,
   perPage,
   groupBy,
+  hasBuildingArea = false,
 }) => {
   let config = {
     method: "get",
@@ -70,7 +71,8 @@ const getClientSessionDetailsRepository = async ({
       first,
       perPage,
       startTime,
-      endTime
+      endTime,
+      hasBuildingArea
     ),
     ...getCommonHeader(),
   };
@@ -132,8 +134,8 @@ const getClientSessionDetailsRepository = async ({
         total,
         perPage,
         location: location,
-      }
-    }else {
+      };
+    } else {
       response.data = {
         result: formattedDataResponse,
         location: location,

@@ -9,7 +9,7 @@ import {
   convertFrequencyDataForGraphV2,
 } from "@/utils/chartDataHelper";
 import LineChart from "../Charts/LineChart";
-import { groupBy } from "@/utils/helperMethods";
+import { generateRandomHexCodes, generateRandomRGBAColor, groupBy } from "@/utils/helperMethods";
 
 const ClientFrequencyContainer = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -18,11 +18,13 @@ const ClientFrequencyContainer = () => {
   const generateReport = async ({ dateRange, location, frequencyType }) => {
     setIsLoading(true);
     let locationStr = `${location.campus}`;
+    let hasBuildingArea = false;
     if (location.building) {
       locationStr = `${locationStr} > ${location.building}`;
     }
     if (location.buildingArea) {
       locationStr = `${locationStr} > ${location.buildingArea}`;
+      hasBuildingArea = true;
     }
     const startDate = Date.parse(dateRange[0]);
     const endDate = Date.parse(dateRange[1]);
@@ -30,8 +32,9 @@ const ClientFrequencyContainer = () => {
       location: locationStr,
       startDate,
       endDate,
+      hasBuildingArea
     });
-    const groupLevel = location.buildingArea ? "macAddress" : "buildingArea";
+    const groupLevel = location.buildingArea ? "apMacAddress" : "buildingArea";
     const levelByData = groupBy(
       clientResponse.result,
       (obj) => obj[groupLevel]
@@ -49,11 +52,13 @@ const ClientFrequencyContainer = () => {
         dataByClientFrequencyType
       );
       console.log(level, chartData);
+      const rgbColor = generateRandomRGBAColor();
+
       datasets.push({
         data: chartData,
         label: level,
-        borderColor: "rgb(255, 205, 86)",
-        backgroundColor: "rgb(255, 205, 86,0.5)",
+        borderColor: rgbColor(),
+        backgroundColor: rgbColor(0.5),
         borderWidth: 2,
       });
     });

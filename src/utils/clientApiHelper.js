@@ -11,7 +11,8 @@ export const getClientSession = async ({
   apName,
   startDate,
   endDate,
-  location
+  location,
+  hasBuildingArea
 }) => {
   let locationStr = `${campusName} > ${buildingName}`;
   if (floorName) {
@@ -24,6 +25,7 @@ export const getClientSession = async ({
       apName: apName,
       startTime: startDate,
       endTime: endDate,
+      hasBuildingArea
     },
   });
   if (!res) {

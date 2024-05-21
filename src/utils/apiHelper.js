@@ -25,9 +25,13 @@ export const getClientSessionUrl = (
   first = 0,
   perPage = 1000,
   startTime,
-  endTime
+  endTime,
+  hasBuildingArea
 ) => {
   let url = `${CISCO_PRIME_API_URL}data/ClientSessions?.full=true&.firstResult=${first}&.maxResults=${perPage}&location=contains("${location}")&sessionStartTime=between(${startTime},${endTime})`;
+  if (hasBuildingArea) {
+    url = `${CISCO_PRIME_API_URL}data/ClientSessions?.full=true&.firstResult=${first}&.maxResults=${perPage}&location="${location}"&sessionStartTime=between(${startTime},${endTime})`;
+  }
   if (apName) {
     url = `${CISCO_PRIME_API_URL}data/ClientSessions?.full=true&.firstResult=${first}&.maxResults=${perPage}&apMacAddress="${apName}"&sessionStartTime=between(${startTime},${endTime})`;
   }

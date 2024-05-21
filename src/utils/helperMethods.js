@@ -32,6 +32,20 @@ export function generateRandomHexCodes(n) {
   return hexCodes;
 }
 
+export function generateRandomRGBAColor() {
+  // Generate random values for Red, Green, and Blue channels
+  const red = Math.floor(Math.random() * 256);
+  const green = Math.floor(Math.random() * 256);
+  const blue = Math.floor(Math.random() * 256);
+
+  // Format the RGBA color code
+  const rgbaColor = function (opacity = 1) {
+    return "rgba(" + red + "," + green + "," + blue + "," + opacity + ")";
+  };
+
+  return rgbaColor;
+}
+
 export const flattenObj = (ob) => {
   let result = {};
 
